@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Trend line: rising left to right with natural undulation -->
+  <polyline
+    points="2,26 7,20 12,22 17,13 22,15 27,6"
+    stroke="#ea580c"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <!-- Arrowhead at tip (pointing up-right) -->
+  <polyline
+    points="21,5 27,6 26,12"
+    stroke="#ea580c"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
