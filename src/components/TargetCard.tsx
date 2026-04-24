@@ -171,13 +171,20 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
         {/* Top-right: % below 100%, Mark Done at/above 100%, ✓ Done if finished */}
         <div className="flex-shrink-0 ml-4 text-right">
           {target.is_done ? (
-            <button
-              onClick={confirmMarkAsDone}
-              disabled={loading}
-              className="px-4 py-2 bg-orange-500 hover:bg-orange-400 text-white font-bold rounded-xl text-sm transition disabled:opacity-50"
-            >
-              ✓ Done
-            </button>
+            <div className="flex flex-col items-end gap-1.5">
+              <button
+                onClick={confirmMarkAsDone}
+                disabled={loading}
+                className="px-4 py-2 bg-orange-500 hover:bg-orange-400 text-white font-bold rounded-xl text-sm transition disabled:opacity-50"
+              >
+                ✓ Done
+              </button>
+              {progressPercentage > 100 && (
+                <span className="text-xs font-black px-2 py-0.5 rounded-md" style={{ background: '#78350f', color: '#fbbf24' }}>
+                  +{Math.round(progressPercentage - 100)}% extra
+                </span>
+              )}
+            </div>
           ) : progressPercentage >= 100 ? (
             <div className="flex flex-col items-end gap-1.5">
               <button
