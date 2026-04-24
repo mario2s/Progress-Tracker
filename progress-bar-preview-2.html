@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Progress Bar Options v2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: #09090b; font-family: system-ui, sans-serif; }
+
+    /* Glow on filled blocks */
+    .block-glow {
+      box-shadow: 0 0 10px 3px rgba(234,88,12,0.55), 0 0 2px 1px rgba(251,146,60,0.4);
+    }
+    /* Stronger glow on the leading edge block */
+    .block-glow-lead {
+      box-shadow: 0 0 18px 6px rgba(234,88,12,0.7), 0 0 4px 2px rgba(251,146,60,0.5);
+    }
+    /* Bar glow (continuous) */
+    .bar-glow {
+      box-shadow: 0 0 16px 5px rgba(234,88,12,0.55);
+    }
+    /* Pulsing lead-edge glow */
+    @keyframes pulse-lead {
+      0%,100% { box-shadow: 0 0 14px 4px rgba(234,88,12,0.5); }
+      50%      { box-shadow: 0 0 28px 10px rgba(234,88,12,0.75); }
+    }
+    .pulse-lead { animation: pulse-lead 2.2s ease-in-out infinite; }
+  </style>
+</head>
+<body class="p-8">
+
+  <h1 class="text-3xl font-bold text-zinc-100 mb-2">Progress Bar Options — Round 2</h1>
+  <p class="text-zinc-500 mb-10 text-sm">Combining blocks (D) + glow (B) + clean bottom with only +1 / -1</p>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+
+    <!-- ── E — Glowing blocks, % above, clean bottom ──────────── -->
+    <div>
+      <div class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-3">E — Glowing blocks</div>
+      <div class="bg-zinc-900 rounded-2xl p-6 border border-zinc-800">
+        <!-- Header -->
+        <div class="flex justify-between items-start mb-5">
+          <div>
+            <h3 class="text-xl font-bold text-zinc-100">Learn TypeScript</h3>
+            <p class="text-sm text-zinc-500 mt-1">210 / 600 min · P2</p>
+          </div>
+          <button class="px-3 py-1.5 rounded-lg font-semibold bg-zinc-800 text-zinc-600 border border-zinc-700 cursor-not-allowed text-xs">Mark Done</button>
+        </div>
+
+        <!-- % + blocks -->
+        <div class="mb-6">
+          <div class="flex items-end justify-between mb-3">
+            <span class="text-5xl font-black text-orange-500">35%</span>
+            <span class="text-zinc-500 text-sm mb-1">390 min left</span>
+          </div>
+          <div class="flex gap-1.5">
+            <div class="flex-1 h-8 rounded-md block-glow" style="background:linear-gradient(135deg,#9a3412,#ea580c)"></div>
+            <div class="flex-1 h-8 rounded-md block-glow" style="background:linear-gradient(135deg,#9a3412,#ea580c)"></div>
+            <div class="flex-1 h-8 rounded-md block-glow" style="background:linear-gradient(135deg,#9a3412,#ea580c)"></div>
+            <div class="flex-1 h-8 rounded-md block-glow-lead pulse-lead" style="background:linear-gradient(135deg,#c2410c,#fb923c)"></div>
+            <div class="flex-1 h-8 rounded-md bg-zinc-800"></div>
+            <div class="flex-1 h-8 rounded-md bg-zinc-800"></div>
+            <div class="flex-1 h-8 rounded-md bg-zinc-800"></div>
+            <div class="flex-1 h-8 rounded-md bg-zinc-800"></div>
+            <div class="flex-1 h-8 rounded-md bg-zinc-800"></div>
+            <div class="flex-1 h-8 rounded-md bg-zinc-800"></div>
+          </div>
+        </div>
+
+        <!-- Clean bottom -->
+        <div class="flex gap-3">
+          <button class="flex-1 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 rounded-xl font-semibold text-sm transition">+1 (15 min)</button>
+          <button class="flex-1 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 rounded-xl font-semibold text-sm transition">-1 (15 min)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── F — Tall segmented bar with glow ───────────────────── -->
+    <div>
+      <div class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-3">F — Tall segmented bar with glow + % inside</div>
+      <div class="bg-zinc-900 rounded-2xl p-6 border border-zinc-800">
+        <!-- Header -->
+        <div class="flex justify-between items-start mb-5">
+          <div>
+            <h3 class="text-xl font-bold text-zinc-100">Learn TypeScript</h3>
+            <p class="text-sm text-zinc-500 mt-1">210 / 600 min · P2</p>
+          </div>
+          <button class="px-3 py-1.5 rounded-lg font-semibold bg-zinc-800 text-zinc-600 border border-zinc-700 cursor-not-allowed text-xs">Mark Done</button>
+        </div>
+
+        <!-- Tall bar with segment gaps -->
+        <div class="mb-6">
+          <div class="relative w-full bg-zinc-800 rounded-xl h-12 overflow-hidden">
+            <!-- filled portion -->
+            <div
+              class="h-full rounded-xl bar-glow transition-all duration-300"
+              style="width:35%; background:linear-gradient(90deg,#9a3412 0%,#ea580c 70%,#fb923c 100%);"
+            ></div>
+            <!-- segment dividers (overlay) -->
+            <div class="absolute inset-0 flex pointer-events-none">
+              <div class="flex-1"></div>
+              <div class="w-px bg-zinc-900 opacity-80"></div>
+              <div class="flex-1"></div>
+              <div class="w-px bg-zinc-900 opacity-80"></div>
+              <div class="flex-1"></div>
+              <div class="w-px bg-zinc-900 opacity-80"></div>
+              <div class="flex-1"></div>
+              <div class="w-px bg-zinc-900 opacity-80"></div>
+              <div class="flex-1"></div>
+              <div class="w-px bg-zinc-900 opacity-80"></div>
+              <div class="flex-1"></div>
+              <div class="w-px bg-zinc-900 opacity-80"></div>
+              <div class="flex-1"></div>
+              <div class="w-px bg-zinc-900 opacity-80"></div>
+              <div class="flex-1"></div>
+              <div class="w-px bg-zinc-900 opacity-80"></div>
+              <div class="flex-1"></div>
+              <div class="w-px bg-zinc-900 opacity-80"></div>
+              <div class="flex-1"></div>
+            </div>
+            <!-- % label centered -->
+            <span class="absolute inset-0 flex items-center justify-center text-lg font-black text-white drop-shadow-lg">35%</span>
+          </div>
+          <div class="flex justify-between mt-1.5 text-xs text-zinc-600">
+            <span>0</span><span>50%</span><span>100%</span>
+          </div>
+        </div>
+
+        <!-- Clean bottom -->
+        <div class="flex gap-3">
+          <button class="flex-1 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 rounded-xl font-semibold text-sm transition">+1 (15 min)</button>
+          <button class="flex-1 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 rounded-xl font-semibold text-sm transition">-1 (15 min)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── G — Blocks + glowing continuous bar stacked ────────── -->
+    <div>
+      <div class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-3">G — Two-layer: thin glow bar + blocks below</div>
+      <div class="bg-zinc-900 rounded-2xl p-6 border border-zinc-800">
+        <!-- Header -->
+        <div class="flex justify-between items-start mb-5">
+          <div>
+            <h3 class="text-xl font-bold text-zinc-100">Learn TypeScript</h3>
+            <p class="text-sm text-zinc-500 mt-1">210 / 600 min · P2</p>
+          </div>
+          <button class="px-3 py-1.5 rounded-lg font-semibold bg-zinc-800 text-zinc-600 border border-zinc-700 cursor-not-allowed text-xs">Mark Done</button>
+        </div>
+
+        <!-- % -->
+        <div class="flex items-end justify-between mb-3">
+          <span class="text-5xl font-black text-orange-500">35%</span>
+          <span class="text-zinc-500 text-sm mb-1">390 min left</span>
+        </div>
+
+        <!-- Thin glowing bar -->
+        <div class="w-full bg-zinc-800 rounded-full h-3 overflow-hidden mb-2">
+          <div class="h-full rounded-full bar-glow" style="width:35%; background:linear-gradient(90deg,#c2410c,#fb923c);"></div>
+        </div>
+
+        <!-- Block ticks below -->
+        <div class="flex gap-1.5 mb-6">
+          <div class="flex-1 h-5 rounded-sm block-glow" style="background:linear-gradient(135deg,#9a3412,#ea580c)"></div>
+          <div class="flex-1 h-5 rounded-sm block-glow" style="background:linear-gradient(135deg,#9a3412,#ea580c)"></div>
+          <div class="flex-1 h-5 rounded-sm block-glow" style="background:linear-gradient(135deg,#9a3412,#ea580c)"></div>
+          <div class="flex-1 h-5 rounded-sm block-glow-lead pulse-lead" style="background:linear-gradient(135deg,#c2410c,#fb923c)"></div>
+          <div class="flex-1 h-5 rounded-sm bg-zinc-800"></div>
+          <div class="flex-1 h-5 rounded-sm bg-zinc-800"></div>
+          <div class="flex-1 h-5 rounded-sm bg-zinc-800"></div>
+          <div class="flex-1 h-5 rounded-sm bg-zinc-800"></div>
+          <div class="flex-1 h-5 rounded-sm bg-zinc-800"></div>
+          <div class="flex-1 h-5 rounded-sm bg-zinc-800"></div>
+        </div>
+
+        <!-- Clean bottom -->
+        <div class="flex gap-3">
+          <button class="flex-1 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 rounded-xl font-semibold text-sm transition">+1 (15 min)</button>
+          <button class="flex-1 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 rounded-xl font-semibold text-sm transition">-1 (15 min)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── H — Large blocks, gradient fill gets brighter ─────── -->
+    <div>
+      <div class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-3">H — Gradient blocks (each brighter), % top-right</div>
+      <div class="bg-zinc-900 rounded-2xl p-6 border border-zinc-800">
+        <!-- Header -->
+        <div class="flex justify-between items-start mb-5">
+          <div>
+            <h3 class="text-xl font-bold text-zinc-100">Learn TypeScript</h3>
+            <p class="text-sm text-zinc-500 mt-1">210 / 600 min · P2</p>
+          </div>
+          <div class="text-right">
+            <p class="text-4xl font-black text-orange-500 leading-none">35%</p>
+            <p class="text-xs text-zinc-600 mt-1">390 min left</p>
+          </div>
+        </div>
+
+        <!-- Gradient blocks — each filled block slightly brighter -->
+        <div class="flex gap-2 mb-1.5">
+          <div class="flex-1 h-9 rounded-lg" style="background:#7c2d12; box-shadow:0 0 8px 2px rgba(124,45,18,0.5)"></div>
+          <div class="flex-1 h-9 rounded-lg" style="background:#9a3412; box-shadow:0 0 8px 2px rgba(154,52,18,0.55)"></div>
+          <div class="flex-1 h-9 rounded-lg" style="background:#c2410c; box-shadow:0 0 10px 3px rgba(194,65,12,0.6)"></div>
+          <!-- partial / lead block -->
+          <div class="flex-1 h-9 rounded-lg pulse-lead" style="background:linear-gradient(135deg,#ea580c,#fb923c); box-shadow:0 0 18px 6px rgba(234,88,12,0.7)"></div>
+          <div class="flex-1 h-9 rounded-lg bg-zinc-800 opacity-50"></div>
+          <div class="flex-1 h-9 rounded-lg bg-zinc-800 opacity-50"></div>
+          <div class="flex-1 h-9 rounded-lg bg-zinc-800 opacity-50"></div>
+          <div class="flex-1 h-9 rounded-lg bg-zinc-800 opacity-50"></div>
+          <div class="flex-1 h-9 rounded-lg bg-zinc-800 opacity-50"></div>
+          <div class="flex-1 h-9 rounded-lg bg-zinc-800 opacity-50"></div>
+        </div>
+        <p class="text-xs text-zinc-600 mb-6">Each block = 10% · <button class="px-3 py-1 rounded bg-zinc-800 border border-zinc-700 text-zinc-500 hover:text-zinc-300 transition text-xs ml-1">Mark Done</button></p>
+
+        <!-- Clean bottom -->
+        <div class="flex gap-3">
+          <button class="flex-1 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 rounded-xl font-semibold text-sm transition">+1 (15 min)</button>
+          <button class="flex-1 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 rounded-xl font-semibold text-sm transition">-1 (15 min)</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
