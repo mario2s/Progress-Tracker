@@ -138,9 +138,10 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
   return (
     <div className={`bg-[#fff8f0] dark:bg-zinc-900 rounded-2xl p-6 border shadow-[0_16px_30px_rgba(120,53,15,0.08)] transition-colors duration-200 ${
       target.is_done
-        ? 'border-[#ead9c8] dark:border-zinc-800 opacity-50'
+        ? 'border-[#ead9c8] dark:border-zinc-800'
         : 'border-[#ead9c8] dark:border-zinc-800 hover:border-[#ddb892] dark:hover:border-zinc-700'
     }`}>
+      <div className={target.is_done ? 'opacity-50' : ''}>
       {error && <div className="bg-red-50 dark:bg-red-950 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 p-2 rounded mb-3 text-sm">{error}</div>}
 
       {/* Header */}
@@ -245,6 +246,7 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
         >
           {loading ? '↓ Removing...' : '-1 (15 min)'}
         </button>
+      </div>
       </div>
 
       {/* Delete Confirmation Modal */}
