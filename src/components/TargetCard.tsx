@@ -107,9 +107,16 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
 
   const blockStyle = (i: number): React.CSSProperties => {
     if (isOver && i === 9) {
-      return { background: 'linear-gradient(135deg,#d97706,#fbbf24)', boxShadow: '0 0 22px 8px rgba(251,191,36,0.75)' };
+      const glow = target.is_done ? {} : { boxShadow: '0 0 22px 8px rgba(251,191,36,0.75)' };
+      return { background: 'linear-gradient(135deg,#d97706,#fbbf24)', ...glow };
     }
     if (isOver || i < filledCount) {
+      if (target.is_done) {
+        if (i === 0) return { background: '#7c2d12' };
+        if (i === 1) return { background: '#9a3412' };
+        if (i === 2) return { background: '#c2410c' };
+        return { background: 'linear-gradient(135deg,#ea580c,#fb923c)' };
+      }
       if (i === 0) return { background: '#7c2d12', boxShadow: '0 0 8px 2px rgba(124,45,18,0.5)' };
       if (i === 1) return { background: '#9a3412', boxShadow: '0 0 8px 2px rgba(154,52,18,0.55)' };
       if (i === 2) return { background: '#c2410c', boxShadow: '0 0 10px 3px rgba(194,65,12,0.6)' };
