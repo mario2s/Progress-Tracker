@@ -71,7 +71,7 @@ export const TrackerPage = () => {
       if (dist > 0) setPullDistance(Math.min(dist, THRESHOLD + 20));
     };
     const onTouchEnd = () => {
-      if (pullDistance >= THRESHOLD) window.location.reload();
+      if (pullDistance >= THRESHOLD) loadTargets();
       pullStartY.current = null;
       setPullDistance(0);
     };
