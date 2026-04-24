@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import type { Target } from '../lib/supabase';
 import { targetsService } from '../lib/supabase';
 import { timeUtils } from '../lib/timeUtils';
+import { useAppMode } from '../contexts/AppModeContext';
+
+const formatDueDate = (dateStr: string): string => {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+};
 
 interface TargetCardProps {
   target: Target;
@@ -10,10 +16,12 @@ interface TargetCardProps {
 }
 
 export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDelete }) => {
+  const { mode } = useAppMode();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showMarkDoneConfirm, setShowMarkDoneConfirm] = useState(false);
+  const [showDueDate, setShowDueDate] = useState(false);
 
   const progressPercentage = timeUtils.getProgressPercentage(
     target.progress_minutes,
@@ -151,6 +159,30 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
             <h3 className={`text-xl font-bold transition ${target.is_done ? 'text-[#b89b7c] dark:text-zinc-600 line-through' : 'text-[#2a1f16] dark:text-zinc-100'}`}>
               {target.name}
             </h3>
+            {/* Due date — Q: icon toggle, S: always visible */}
+            {target.due_date && (
+              mode === 'quiet' ? (
+                <>
+                  <button
+                    onClick={() => setShowDueDate(v => !v)}
+                    title={showDueDate ? 'Hide due date' : 'Show due date'}
+                    className="text-[#8f7353] dark:text-zinc-500 hover:text-orange-500 transition flex-shrink-0"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                      <line x1="16" y1="2" x2="16" y2="6"/>
+                      <line x1="8" y1="2" x2="8" y2="6"/>
+                      <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                  </button>
+                  {showDueDate && (
+                    <span className="text-xs text-[#7c5f37] dark:text-zinc-500 flex-shrink-0">{formatDueDate(target.due_date)}</span>
+                  )}
+                </>
+              ) : (
+                <span className="text-xs text-[#7c5f37] dark:text-zinc-500 flex-shrink-0">{formatDueDate(target.due_date)}</span>
+              )
+            )}
             <button
               onClick={confirmDelete}
               disabled={loading}

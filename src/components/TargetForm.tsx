@@ -6,10 +6,16 @@ interface TargetFormProps {
   onTargetCreated: (target: Target) => void;
 }
 
+const defaultDueDate = (): string => {
+  const d = new Date();
+  d.setDate(d.getDate() + 7);
+  return d.toISOString().split('T')[0];
+};
+
 export const TargetForm: React.FC<TargetFormProps> = ({ onTargetCreated }) => {
   const [name, setName] = useState('');
   const [targetHours, setTargetHours] = useState('');
-  const [dueDate, setDueDate] = useState('');
+  const [dueDate, setDueDate] = useState(defaultDueDate);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,13 +33,18 @@ export const TargetForm: React.FC<TargetFormProps> = ({ onTargetCreated }) => {
       return;
     }
 
+    if (!dueDate) {
+      setError('Due date is required');
+      return;
+    }
+
     setLoading(true);
     try {
-      const target = await targetsService.createTarget(name, parseFloat(targetHours), dueDate || null);
+      const target = await targetsService.createTarget(name, parseFloat(targetHours), dueDate);
       onTargetCreated(target);
       setName('');
       setTargetHours('');
-      setDueDate('');
+      setDueDate(defaultDueDate());
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create target');
     } finally {
@@ -78,7 +89,7 @@ export const TargetForm: React.FC<TargetFormProps> = ({ onTargetCreated }) => {
 
         <div>
           <label className="block text-sm font-semibold text-[#7c5f37] dark:text-zinc-400 mb-2">
-            Due Date <span className="font-normal text-[#b89b7c] dark:text-zinc-600">(optional)</span>
+            Due Date
           </label>
           <input
             type="date"
@@ -86,6 +97,7 @@ export const TargetForm: React.FC<TargetFormProps> = ({ onTargetCreated }) => {
             onChange={(e) => setDueDate(e.target.value)}
             className="w-full px-4 py-2.5 bg-[#fff7ef] dark:bg-zinc-800 border border-[#e9d7c4] dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-[#2a1f16] dark:text-zinc-100 transition"
             disabled={loading}
+            required
           />
         </div>
       </div>

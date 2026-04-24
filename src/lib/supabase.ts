@@ -39,7 +39,7 @@ export const authService = {
 };
 
 export const targetsService = {
-  async createTarget(name: string, targetHours: number, dueDate?: string | null): Promise<Target> {
+  async createTarget(name: string, targetHours: number, dueDate: string): Promise<Target> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('Not authenticated');
 
@@ -51,7 +51,7 @@ export const targetsService = {
         progress_minutes: 0,
         priority: 1,
         is_done: false,
-        due_date: dueDate ?? null,
+        due_date: dueDate,
         user_id: user.id,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
