@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { authService } from '../lib/supabase';
-import { ThemeToggleButton } from '../components/ThemeToggleButton';
+import { HeaderControls } from '../components/HeaderControls';
 
 export const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -56,7 +56,7 @@ export const LoginPage = () => {
             <h2 className="text-2xl font-bold text-[#2a1f16] dark:text-zinc-100">
               {isLogin ? 'Sign In' : 'Create Account'}
             </h2>
-            <ThemeToggleButton />
+            <HeaderControls />
           </div>
 
           {error && (
