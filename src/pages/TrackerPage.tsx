@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Target } from '../lib/supabase';
 import { targetsService, authService } from '../lib/supabase';
 import { TargetForm } from '../components/TargetForm';
@@ -56,8 +56,56 @@ export const TrackerPage = () => {
 
   const visibleTargets = targets.filter(t => showDone ? true : !t.is_done);
 
+  // Pull-to-refresh
+  const pullStartY = useRef<number | null>(null);
+  const [pullDistance, setPullDistance] = useState(0);
+  const THRESHOLD = 80;
+
+  useEffect(() => {
+    const onTouchStart = (e: TouchEvent) => {
+      if (window.scrollY === 0) pullStartY.current = e.touches[0].clientY;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (pullStartY.current === null) return;
+      const dist = Math.max(0, e.touches[0].clientY - pullStartY.current);
+      if (dist > 0) setPullDistance(Math.min(dist, THRESHOLD + 20));
+    };
+    const onTouchEnd = () => {
+      if (pullDistance >= THRESHOLD) window.location.reload();
+      pullStartY.current = null;
+      setPullDistance(0);
+    };
+    document.addEventListener('touchstart', onTouchStart, { passive: true });
+    document.addEventListener('touchmove', onTouchMove, { passive: true });
+    document.addEventListener('touchend', onTouchEnd);
+    return () => {
+      document.removeEventListener('touchstart', onTouchStart);
+      document.removeEventListener('touchmove', onTouchMove);
+      document.removeEventListener('touchend', onTouchEnd);
+    };
+  }, [pullDistance]);
+
   return (
     <div className="min-h-screen bg-blue-200 dark:bg-zinc-950 transition-colors duration-200">
+      {/* Pull-to-refresh indicator */}
+      {pullDistance > 0 && (
+        <div
+          className="fixed top-0 left-0 right-0 flex justify-center items-center z-50 pointer-events-none transition-all"
+          style={{ height: `${pullDistance}px` }}
+        >
+          <div className={`flex flex-col items-center gap-1 transition-opacity ${pullDistance >= THRESHOLD ? 'opacity-100' : 'opacity-50'}`}>
+            <svg
+              className={`w-6 h-6 text-orange-500 transition-transform duration-200 ${pullDistance >= THRESHOLD ? 'rotate-180' : ''}`}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+            <span className="text-xs font-semibold text-orange-500">
+              {pullDistance >= THRESHOLD ? 'Release to refresh' : 'Pull to refresh'}
+            </span>
+          </div>
+        </div>
+      )}
       <div className="max-w-5xl mx-auto px-4 py-16">
         {/* Header */}
         <div className="mb-12">
