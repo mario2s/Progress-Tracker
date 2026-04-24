@@ -118,14 +118,14 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
     if (hasPartialBlock && i === filledCount) {
       return { background: 'linear-gradient(135deg,#ea580c,#fb923c)' };
     }
-    return {};
+    return { background: '#3f3f46' };
   };
 
   const blockClass = (i: number): string => {
     if (isOver && i === 9) return 'flex-1 h-9 rounded-lg pulse-over';
     if (hasPartialBlock && i === filledCount) return 'flex-1 h-9 rounded-lg pulse-lead';
     if (isOver || i < filledCount) return 'flex-1 h-9 rounded-lg';
-    return 'flex-1 h-9 rounded-lg opacity-30';
+    return 'flex-1 h-9 rounded-lg';
   };
 
   return (
