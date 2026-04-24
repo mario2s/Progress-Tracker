@@ -122,8 +122,8 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
   };
 
   const blockClass = (i: number): string => {
-    if (isOver && i === 9) return 'flex-1 h-9 rounded-lg pulse-over';
-    if (hasPartialBlock && i === filledCount) return 'flex-1 h-9 rounded-lg pulse-lead';
+    if (!target.is_done && isOver && i === 9) return 'flex-1 h-9 rounded-lg pulse-over';
+    if (!target.is_done && hasPartialBlock && i === filledCount) return 'flex-1 h-9 rounded-lg pulse-lead';
     if (isOver || i < filledCount) return 'flex-1 h-9 rounded-lg';
     return 'flex-1 h-9 rounded-lg';
   };
@@ -190,7 +190,7 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
               <button
                 onClick={confirmMarkAsDone}
                 disabled={loading}
-                className="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-xl text-sm transition disabled:opacity-50"
+                className="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-xl text-sm transition disabled:opacity-50 pulse-btn"
               >
                 Mark Done ✓
               </button>
