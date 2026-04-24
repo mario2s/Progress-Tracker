@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import type { Target } from '../lib/supabase';
 import { targetsService } from '../lib/supabase';
 import { timeUtils } from '../lib/timeUtils';
@@ -101,6 +101,33 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
     }
   };
 
+  const filledCount = Math.min(10, Math.floor(progressPercentage / 10));
+  const isOver = progressPercentage >= 100;
+  const hasPartialBlock = !isOver && progressPercentage % 10 > 0;
+
+  const blockStyle = (i: number): React.CSSProperties => {
+    if (isOver && i === 9) {
+      return { background: 'linear-gradient(135deg,#d97706,#fbbf24)', boxShadow: '0 0 22px 8px rgba(251,191,36,0.75)' };
+    }
+    if (isOver || i < filledCount) {
+      if (i === 0) return { background: '#7c2d12', boxShadow: '0 0 8px 2px rgba(124,45,18,0.5)' };
+      if (i === 1) return { background: '#9a3412', boxShadow: '0 0 8px 2px rgba(154,52,18,0.55)' };
+      if (i === 2) return { background: '#c2410c', boxShadow: '0 0 10px 3px rgba(194,65,12,0.6)' };
+      return { background: 'linear-gradient(135deg,#ea580c,#fb923c)', boxShadow: '0 0 10px 3px rgba(234,88,12,0.55)' };
+    }
+    if (hasPartialBlock && i === filledCount) {
+      return { background: 'linear-gradient(135deg,#ea580c,#fb923c)' };
+    }
+    return {};
+  };
+
+  const blockClass = (i: number): string => {
+    if (isOver && i === 9) return 'flex-1 h-9 rounded-lg pulse-over';
+    if (hasPartialBlock && i === filledCount) return 'flex-1 h-9 rounded-lg pulse-lead';
+    if (isOver || i < filledCount) return 'flex-1 h-9 rounded-lg';
+    return 'flex-1 h-9 rounded-lg opacity-30';
+  };
+
   return (
     <div className={`bg-blue-300 dark:bg-zinc-900 rounded-2xl p-6 border transition-colors duration-200 ${
       target.is_done
@@ -109,8 +136,9 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
     }`}>
       {error && <div className="bg-red-50 dark:bg-red-950 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 p-2 rounded mb-3 text-sm">{error}</div>}
 
-      <div className="flex justify-between items-start mb-4">
-        <div className="flex-1">
+      {/* Header */}
+      <div className="flex justify-between items-start mb-5">
+        <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3">
             <h3 className={`text-xl font-bold transition ${target.is_done ? 'text-zinc-400 dark:text-zinc-600 line-through' : 'text-zinc-800 dark:text-zinc-100'}`}>
               {target.name}
@@ -118,89 +146,73 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
             <button
               onClick={confirmDelete}
               disabled={loading}
-              className="text-zinc-400 dark:text-zinc-600 hover:text-red-400 font-bold text-lg transition w-7 h-7 rounded-full border-2 border-orange-600 hover:border-red-400 flex items-center justify-center"
+              className="text-zinc-400 dark:text-zinc-600 hover:text-red-400 font-bold text-lg transition w-7 h-7 rounded-full border-2 border-orange-600 hover:border-red-400 flex items-center justify-center flex-shrink-0"
               title="Delete"
             >
               ✕
             </button>
           </div>
-          <p className="text-sm text-zinc-500 mt-2">
-            {target.progress_minutes} / {target.target_hours * 60} minutes
-          </p>
+          <div className="flex items-center gap-2 mt-1.5">
+            <span className="text-sm text-zinc-500">{target.progress_minutes} / {target.target_hours * 60} min</span>
+            <span className="text-zinc-600">·</span>
+            <select
+              value={target.priority}
+              onChange={(e) => handlePriorityChange(parseInt(e.target.value))}
+              disabled={loading}
+              className="text-sm bg-transparent border-none outline-none text-zinc-500 cursor-pointer hover:text-zinc-300 transition"
+            >
+              {[1, 2, 3, 4, 5].map(p => (
+                <option key={p} value={p}>P{p}</option>
+              ))}
+            </select>
+          </div>
         </div>
-        <div className="text-right">
-          <p className={`text-3xl font-bold transition ${progressPercentage >= 100 ? 'text-orange-400' : 'text-zinc-500 dark:text-zinc-300'}`}>
-            {Math.round(progressPercentage)}%
-          </p>
+
+        {/* Top-right: % below 100%, Mark Done at/above 100%, ✓ Done if finished */}
+        <div className="flex-shrink-0 ml-4 text-right">
+          {target.is_done ? (
+            <button
+              onClick={confirmMarkAsDone}
+              disabled={loading}
+              className="px-4 py-2 bg-orange-500 hover:bg-orange-400 text-white font-bold rounded-xl text-sm transition disabled:opacity-50"
+            >
+              ✓ Done
+            </button>
+          ) : progressPercentage >= 100 ? (
+            <div className="flex flex-col items-end gap-1.5">
+              <button
+                onClick={confirmMarkAsDone}
+                disabled={loading}
+                className="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-xl text-sm transition disabled:opacity-50"
+              >
+                Mark Done ✓
+              </button>
+              {progressPercentage > 100 && (
+                <span className="text-xs font-black px-2 py-0.5 rounded-md" style={{ background: '#78350f', color: '#fbbf24' }}>
+                  +{Math.round(progressPercentage - 100)}% extra
+                </span>
+              )}
+            </div>
+          ) : (
+            <div>
+              <p className="text-4xl font-black text-orange-500 leading-none">{Math.round(progressPercentage)}%</p>
+              <p className="text-xs text-zinc-600 mt-1">
+                {Math.max(0, target.target_hours * 60 - target.progress_minutes)} min left
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Priority and Done Section */}
-      <div className="flex gap-3 mb-5 items-center">
-        <div className="flex items-center gap-2">
-          <label className="text-sm font-semibold text-zinc-400 dark:text-zinc-500">Priority:</label>
-          <select
-            value={target.priority}
-            onChange={(e) => handlePriorityChange(parseInt(e.target.value))}
-            disabled={loading}
-            className="px-3 py-2 bg-blue-200 dark:bg-zinc-800 border border-blue-400 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-slate-700 dark:text-zinc-200 transition"
-          >
-            {[1, 2, 3, 4, 5].map(p => (
-              <option key={p} value={p}>P{p}</option>
-            ))}
-          </select>
-        </div>
-        <button
-          onClick={confirmMarkAsDone}
-          disabled={loading || progressPercentage < 100}
-          className={`px-4 py-2 rounded-lg font-semibold transition ml-auto ${
-            target.is_done
-              ? 'bg-orange-500 text-white hover:bg-orange-400'
-              : progressPercentage >= 100
-              ? 'bg-orange-600 text-white hover:bg-orange-500'
-              : 'bg-blue-200 dark:bg-zinc-800 text-slate-400 dark:text-zinc-600 cursor-not-allowed border border-blue-400 dark:border-zinc-700'
-          }`}
-        >
-          {target.is_done ? '✓ Done' : 'Mark Done'}
-        </button>
-      </div>
-
-      {/* Progress Bar */}
-      <div className="mb-5">
-        <div className="w-full bg-blue-400 dark:bg-zinc-800 rounded-full h-2 overflow-hidden">
+      {/* Gradient Blocks */}
+      <div className="flex gap-2 mb-6">
+        {Array.from({ length: 10 }, (_, i) => (
           <div
-            className={`h-full transition-all duration-300 rounded-full ${
-              target.is_done
-                ? 'bg-orange-500'
-                : 'bg-orange-600'
-            }`}
-            style={{ width: `${Math.min(progressPercentage, 100)}%` }}
+            key={i}
+            className={blockClass(i)}
+            style={blockStyle(i)}
           />
-        </div>
-      </div>
-
-      {/* Progress Details */}
-      <div className="grid grid-cols-3 gap-3 mb-5 text-center">
-        <div className="bg-zinc-100 dark:bg-zinc-800 p-3 rounded-lg border border-zinc-200 dark:border-zinc-700">
-          <p className="text-xs text-zinc-500 font-semibold">Progress</p>
-          <p className="text-lg font-bold text-zinc-700 dark:text-zinc-200 mt-1">
-            {target.progress_minutes} min
-          </p>
-        </div>
-        <div className="bg-zinc-100 dark:bg-zinc-800 p-3 rounded-lg border border-zinc-200 dark:border-zinc-700">
-          <p className="text-xs text-zinc-500 font-semibold">Target</p>
-          <p className="text-lg font-bold text-zinc-700 dark:text-zinc-200 mt-1">{target.target_hours * 60} min</p>
-        </div>
-        <div className="bg-zinc-100 dark:bg-zinc-800 p-3 rounded-lg border border-zinc-200 dark:border-zinc-700">
-          <p className="text-xs text-zinc-500 font-semibold">Remaining</p>
-          <p className={`text-lg font-bold mt-1 ${
-            Math.max(0, target.target_hours * 60 - target.progress_minutes) === 0
-              ? 'text-orange-400'
-              : 'text-zinc-700 dark:text-zinc-200'
-          }`}>
-            {Math.max(0, target.target_hours * 60 - target.progress_minutes)} min
-          </p>
-        </div>
+        ))}
       </div>
 
       {/* Action Buttons */}
