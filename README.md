@@ -17,13 +17,13 @@ A modern progress tracking application built with React, TypeScript, Vite, Tailw
 - **Frontend**: React 18, TypeScript, Vite
 - **Styling**: Tailwind CSS
 - **Backend**: Supabase (PostgreSQL)
-- **Deployment**: Netlify
+- **Deployment**: Vercel
 
 ## Prerequisites
 
 - Node.js 18+ and npm
 - Supabase account
-- Netlify account (for deployment)
+- Vercel account (for deployment)
 
 ## Setup
 
@@ -95,28 +95,26 @@ Build for production:
 npm run build
 ```
 
-## Deployment to Netlify
+## Deployment to Vercel
 
-### Option 1: Connect GitHub Repository
+### Auto-deploy via GitHub (recommended)
 
 1. Push your code to GitHub
-2. Go to [netlify.com](https://netlify.com)
-3. Click "Connect your Git repository"
-4. Select your Progress Tracker repository
-5. Configure build settings:
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-6. Add environment variables in Netlify:
+2. Go to [vercel.com](https://vercel.com) and sign in with GitHub
+3. Click "Add New Project" and import the repository
+4. Add environment variables:
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_ANON_KEY`
-7. Deploy
+5. Click Deploy
 
-### Option 2: Manual Deploy
+Every subsequent `git push` to `main` will auto-deploy.
+
+### Manual Deploy via CLI
 
 ```bash
-npm install -g netlify-cli
-npm run build
-netlify deploy --prod --dir=dist
+npm install -g vercel
+vercel login
+vercel deploy --prod
 ```
 
 ## Project Structure
