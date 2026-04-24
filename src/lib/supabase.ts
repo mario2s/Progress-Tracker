@@ -40,6 +40,10 @@ export const authService = {
 
 export const targetsService = {
   async createTarget(name: string, targetHours: number, dueDate: string): Promise<Target> {
+    if (targetHours > 10000) {
+      throw new Error('Target hours cannot exceed 10000');
+    }
+
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('Not authenticated');
 

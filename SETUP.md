@@ -82,26 +82,26 @@ The app will open at `http://localhost:5173`
 - **Reset**: Clears progress, keeps target
 - **Delete**: Removes target completely
 
-## Deployment to Netlify
+## Deployment to Vercel
 
 ### Option 1: GitHub Integration (Recommended)
 1. Push code to GitHub
-2. Go to [netlify.com](https://netlify.com)
-3. Click "Add new site" > "Import an existing project"
-4. Select GitHub and your repository
-5. Configure settings:
+2. Go to [vercel.com](https://vercel.com)
+3. Click "Add New Project"
+4. Import your GitHub repository
+5. Configure build settings:
    - Build command: `npm run build`
-   - Publish directory: `dist`
-6. Set environment variables in Netlify:
-   - Go to Site settings > Build & deploy > Environment
+   - Output directory: `dist`
+6. Set environment variables in Vercel:
+   - Go to Project Settings > Environment Variables
    - Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`
-7. Click "Deploy site"
+7. Click "Deploy"
 
 ### Option 2: Manual Deployment
 ```bash
-npm install -g netlify-cli
-npm run build
-netlify deploy --prod --dir=dist
+npm install -g vercel
+vercel login
+vercel deploy --prod
 ```
 
 ## Project Structure
@@ -126,7 +126,6 @@ progress-tracker/
 ├── postcss.config.js             # PostCSS configuration
 ├── vite.config.ts                # Vite configuration
 ├── tsconfig.json                 # TypeScript configuration
-├── netlify.toml                  # Netlify deployment config
 ├── package.json                  # Dependencies
 └── README.md                      # Documentation
 ```
@@ -140,7 +139,7 @@ progress-tracker/
 | Vite | Build tool & dev server |
 | Tailwind CSS | Styling |
 | Supabase | Backend & Database |
-| Netlify | Deployment |
+| Vercel | Deployment |
 
 ## Available Scripts
 
@@ -179,16 +178,16 @@ npm run lint
 - Delete `node_modules` and `package-lock.json`, then run `npm install`
 - Verify Node.js version is 18 or higher: `node --version`
 
-### Netlify deployment fails
-- Check build command: `npm run build`
-- Verify publish directory: `dist`
-- Ensure environment variables are set in Netlify
-- Check build logs in Netlify dashboard
+### Vercel deployment fails
+- Ensure environment variables are set in Vercel
+- Verify Build Command is `npm run build`
+- Verify Output Directory is `dist`
+- Check deployment logs in Vercel dashboard
 
 ## Performance Tips
 
 1. **Database Optimization**: Indexes are created on `created_at` for faster queries
-2. **Caching**: Netlify config includes cache headers for assets
+2. **Caching**: Vercel handles static asset caching automatically
 3. **Code Splitting**: Vite automatically optimizes bundle splitting
 4. **Lazy Loading**: React components load on demand
 
@@ -196,7 +195,7 @@ npm run lint
 
 - Never commit `.env.local` to version control
 - Use `.env.local` for local development only
-- Set environment variables in Netlify dashboard for production
+- Set environment variables in Vercel dashboard for production
 - Supabase RLS policies should be configured based on your needs
 - Current setup uses public access - customize as needed
 
@@ -207,7 +206,7 @@ npm run lint
 3. ✅ Set up environment variables
 4. ✅ Test locally with `npm run dev`
 5. ✅ Build with `npm run build`
-6. ✅ Deploy to Netlify
+6. ✅ Deploy to Vercel
 
 ## Support & Resources
 
@@ -216,4 +215,4 @@ npm run lint
 - [Vite Docs](https://vitejs.dev)
 - [Tailwind CSS Docs](https://tailwindcss.com)
 - [Supabase Docs](https://supabase.com/docs)
-- [Netlify Docs](https://docs.netlify.com)
+- [Vercel Docs](https://vercel.com/docs)

@@ -13,6 +13,7 @@ const defaultDueDate = (): string => {
 };
 
 export const TargetForm: React.FC<TargetFormProps> = ({ onTargetCreated }) => {
+  const MAX_TARGET_HOURS = 10000;
   const [name, setName] = useState('');
   const [targetHours, setTargetHours] = useState('');
   const [dueDate, setDueDate] = useState(defaultDueDate);
@@ -28,8 +29,15 @@ export const TargetForm: React.FC<TargetFormProps> = ({ onTargetCreated }) => {
       return;
     }
 
-    if (!targetHours || parseFloat(targetHours) <= 0) {
+    const parsedTargetHours = parseFloat(targetHours);
+
+    if (!targetHours || parsedTargetHours <= 0) {
       setError('Target hours must be greater than 0');
+      return;
+    }
+
+    if (parsedTargetHours > MAX_TARGET_HOURS) {
+      setError(`Target hours cannot exceed ${MAX_TARGET_HOURS}`);
       return;
     }
 
@@ -40,7 +48,7 @@ export const TargetForm: React.FC<TargetFormProps> = ({ onTargetCreated }) => {
 
     setLoading(true);
     try {
-      const target = await targetsService.createTarget(name, parseFloat(targetHours), dueDate);
+      const target = await targetsService.createTarget(name, parsedTargetHours, dueDate);
       onTargetCreated(target);
       setName('');
       setTargetHours('');
@@ -82,6 +90,7 @@ export const TargetForm: React.FC<TargetFormProps> = ({ onTargetCreated }) => {
             placeholder="e.g., 10"
             step="0.5"
             min="0.5"
+            max={MAX_TARGET_HOURS}
             className="w-full px-4 py-2.5 bg-[#fff7ef] dark:bg-zinc-800 border border-[#e9d7c4] dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-[#2a1f16] dark:text-zinc-100 placeholder-[#b89b7c] dark:placeholder-zinc-600 transition"
             disabled={loading}
           />

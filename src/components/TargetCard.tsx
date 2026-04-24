@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { Target } from '../lib/supabase';
 import { targetsService } from '../lib/supabase';
 import { timeUtils } from '../lib/timeUtils';
@@ -23,8 +23,24 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
   const [showMarkDoneConfirm, setShowMarkDoneConfirm] = useState(false);
   const [showDueDate, setShowDueDate] = useState(false);
   const [showFullName, setShowFullName] = useState(false);
-  const isLongName = target.name.length > 20;
-  const displayName = isLongName ? target.name.slice(0, 20) + '...' : target.name;
+  const [nameLimit, setNameLimit] = useState(() =>
+    typeof window !== 'undefined' && window.innerWidth < 640 ? 12 : 20
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 639px)');
+    const updateNameLimit = () => setNameLimit(mediaQuery.matches ? 12 : 20);
+
+    updateNameLimit();
+    mediaQuery.addEventListener('change', updateNameLimit);
+
+    return () => {
+      mediaQuery.removeEventListener('change', updateNameLimit);
+    };
+  }, []);
+
+  const isLongName = target.name.length > nameLimit;
+  const displayName = isLongName ? target.name.slice(0, nameLimit) + '...' : target.name;
 
   const progressPercentage = timeUtils.getProgressPercentage(
     target.progress_minutes,
