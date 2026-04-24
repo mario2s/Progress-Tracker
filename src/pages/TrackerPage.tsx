@@ -86,7 +86,7 @@ export const TrackerPage = () => {
   }, [pullDistance]);
 
   return (
-    <div className="min-h-screen bg-blue-200 dark:bg-zinc-950 transition-colors duration-200">
+    <div className="min-h-screen bg-[#f7efe4] dark:bg-zinc-950 transition-colors duration-200">
       {/* Pull-to-refresh indicator */}
       {pullDistance > 0 && (
         <div
@@ -111,15 +111,15 @@ export const TrackerPage = () => {
         <div className="mb-12">
           <div className="flex items-start justify-between gap-4 mb-6">
             <div className="min-w-0">
-              <h1 className="text-3xl sm:text-6xl font-bold text-zinc-800 dark:text-zinc-100 mb-2">Progress Tracker</h1>
-              <p className="text-zinc-500 text-sm sm:text-lg">Track your goals with clarity and purpose</p>
+              <h1 className="text-3xl sm:text-6xl font-bold text-[#2a1f16] dark:text-zinc-100 mb-2">Progress Tracker</h1>
+              <p className="text-[#7c5f37] dark:text-zinc-500 text-sm sm:text-lg">Track your goals with clarity and purpose</p>
             </div>
             <div className="flex flex-col gap-3 items-end flex-shrink-0">
               <div className="w-36 sm:w-48 flex gap-3">
                 <ThemeToggleButton />
                 <button
                   onClick={handleSignOut}
-                  className="flex-1 py-2.5 sm:py-3 bg-blue-300 dark:bg-zinc-800 hover:bg-blue-400 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 rounded-xl font-semibold text-sm sm:text-base transition transform hover:scale-105 border border-blue-400 dark:border-zinc-700 shadow-lg whitespace-nowrap"
+                  className="flex-1 py-2.5 sm:py-3 bg-[#fff7ef] dark:bg-zinc-800 hover:bg-[#f8ede0] dark:hover:bg-zinc-700 text-[#3b2b1f] dark:text-zinc-200 rounded-xl font-semibold text-sm sm:text-base transition transform hover:scale-105 border border-[#e9d7c4] dark:border-zinc-700 shadow-lg whitespace-nowrap"
                 >
                   Sign out →
                 </button>
@@ -128,7 +128,7 @@ export const TrackerPage = () => {
                 onClick={() => setShowDone(!showDone)}
                 className={`w-36 sm:w-48 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold text-sm sm:text-base transition transform hover:scale-105 whitespace-nowrap shadow-lg ${
                   showDone
-                    ? 'bg-blue-300 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-blue-400 dark:hover:bg-zinc-700 border border-blue-400 dark:border-zinc-700'
+                    ? 'bg-[#fff7ef] dark:bg-zinc-800 text-[#3b2b1f] dark:text-zinc-200 hover:bg-[#f8ede0] dark:hover:bg-zinc-700 border border-[#e9d7c4] dark:border-zinc-700'
                     : 'bg-orange-600 text-white hover:bg-orange-500'
                 }`}
               >
@@ -142,7 +142,7 @@ export const TrackerPage = () => {
               </button>
             </div>
           </div>
-          <p className="text-zinc-400 dark:text-zinc-600 text-sm">{user?.email}</p>
+          <p className="text-[#8f7353] dark:text-zinc-600 text-sm">{user?.email}</p>
         </div>
 
         {/* Error Message */}
@@ -161,12 +161,12 @@ export const TrackerPage = () => {
         {/* Modal Overlay */}
         {showForm && (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
-            <div className="bg-blue-300 dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 border border-blue-400 dark:border-zinc-800">
-              <div className="flex justify-between items-center p-8 border-b border-blue-400 dark:border-zinc-800">
-                <h2 className="text-3xl font-bold text-zinc-800 dark:text-zinc-100">Create New Target</h2>
+            <div className="bg-[#fff8f0] dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 border border-[#ead9c8] dark:border-zinc-800">
+              <div className="flex justify-between items-center p-8 border-b border-[#ead9c8] dark:border-zinc-800">
+                <h2 className="text-3xl font-bold text-[#2a1f16] dark:text-zinc-100">Create New Target</h2>
                 <button
                   onClick={() => setShowForm(false)}
-                  className="text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-200 text-2xl font-bold transition"
+                  className="text-[#8f7353] dark:text-zinc-500 hover:text-[#2a1f16] dark:hover:text-zinc-200 text-2xl font-bold transition"
                 >
                   ✕
                 </button>
@@ -181,17 +181,17 @@ export const TrackerPage = () => {
         {/* Targets List */}
         {loading ? (
           <div className="flex justify-center items-center py-12">
-            <div className="text-zinc-400 dark:text-zinc-600 animate-pulse">Loading targets...</div>
+            <div className="text-[#8f7353] dark:text-zinc-600 animate-pulse">Loading targets...</div>
           </div>
         ) : targets.length === 0 ? (
-          <div className="bg-blue-300 dark:bg-zinc-900 rounded-2xl p-16 text-center border border-blue-400 dark:border-zinc-800">
-            <p className="text-zinc-500 text-lg">No targets yet. Create one to get started!</p>
+          <div className="bg-[#fff8f0] dark:bg-zinc-900 rounded-2xl p-16 text-center border border-[#ead9c8] dark:border-zinc-800 shadow-[0_16px_30px_rgba(120,53,15,0.08)]">
+            <p className="text-[#7c5f37] dark:text-zinc-500 text-lg">No targets yet. Create one to get started!</p>
           </div>
         ) : (
           <div>
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-zinc-700 dark:text-zinc-200">
-                Your Targets <span className="text-zinc-400 dark:text-zinc-500">({visibleTargets.length})</span>
+              <h2 className="text-2xl font-bold text-[#2a1f16] dark:text-zinc-200">
+                Your Targets <span className="text-[#8f7353] dark:text-zinc-500">({visibleTargets.length})</span>
               </h2>
             </div>
             <div className="grid gap-4">
@@ -208,7 +208,7 @@ export const TrackerPage = () => {
         )}
 
         {/* Footer */}
-        <div className="mt-16 text-center text-zinc-400 dark:text-zinc-700 text-sm">
+        <div className="mt-16 text-center text-[#8f7353] dark:text-zinc-700 text-sm">
           <p>Build with NS and AI by MD</p>
         </div>
       </div>

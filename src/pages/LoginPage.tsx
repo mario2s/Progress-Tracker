@@ -44,16 +44,16 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-blue-200 dark:bg-zinc-950 flex items-center justify-center px-4 transition-colors duration-200">
+    <div className="min-h-screen bg-[#f7efe4] dark:bg-zinc-950 flex items-center justify-center px-4 transition-colors duration-200">
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-zinc-800 dark:text-zinc-100 mb-2">Progress Tracker</h1>
-          <p className="text-zinc-500">Track your goals with clarity and purpose</p>
+          <h1 className="text-4xl font-bold text-[#2a1f16] dark:text-zinc-100 mb-2">Progress Tracker</h1>
+          <p className="text-[#7c5f37] dark:text-zinc-500">Track your goals with clarity and purpose</p>
         </div>
 
-        <div className="bg-blue-300 dark:bg-zinc-900 rounded-2xl border border-blue-400 dark:border-zinc-800 p-8">
+        <div className="bg-[#fff8f0] dark:bg-zinc-900 rounded-2xl border border-[#ead9c8] dark:border-zinc-800 p-8 shadow-[0_16px_30px_rgba(120,53,15,0.08)]">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-zinc-800 dark:text-zinc-100">
+            <h2 className="text-2xl font-bold text-[#2a1f16] dark:text-zinc-100">
               {isLogin ? 'Sign In' : 'Create Account'}
             </h2>
             <ThemeToggleButton />
@@ -72,7 +72,7 @@ export const LoginPage = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4" autoComplete="on">
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-zinc-400 mb-2">Email</label>
+              <label htmlFor="email" className="block text-sm font-semibold text-[#7c5f37] dark:text-zinc-400 mb-2">Email</label>
               <input
                 id="email"
                 name="email"
@@ -82,12 +82,12 @@ export const LoginPage = () => {
                 placeholder="you@example.com"
                 required
                 autoComplete="email"
-                className="w-full px-4 py-2.5 bg-blue-200 dark:bg-zinc-800 border border-blue-400 dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-600 transition"
+                className="w-full px-4 py-2.5 bg-[#fff7ef] dark:bg-zinc-800 border border-[#e9d7c4] dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 text-[#2a1f16] dark:text-zinc-100 placeholder-[#b89b7c] dark:placeholder-zinc-600 transition"
                 disabled={loading}
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-2">Password</label>
+              <label htmlFor="password" className="block text-sm font-semibold text-[#7c5f37] dark:text-zinc-400 mb-2">Password</label>
               <input
                 id="password"
                 name="password"
@@ -98,13 +98,13 @@ export const LoginPage = () => {
                 required
                 minLength={6}
                 autoComplete={isLogin ? 'current-password' : 'new-password'}
-                className="w-full px-4 py-2.5 bg-blue-200 dark:bg-zinc-800 border border-blue-400 dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-600 transition"
+                className="w-full px-4 py-2.5 bg-[#fff7ef] dark:bg-zinc-800 border border-[#e9d7c4] dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 text-[#2a1f16] dark:text-zinc-100 placeholder-[#b89b7c] dark:placeholder-zinc-600 transition"
                 disabled={loading}
               />
             </div>
             {!isLogin && (
               <div>
-                <label htmlFor="confirm-password" className="block text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-2">Confirm Password</label>
+                <label htmlFor="confirm-password" className="block text-sm font-semibold text-[#7c5f37] dark:text-zinc-400 mb-2">Confirm Password</label>
                 <input
                   id="confirm-password"
                   name="confirm-password"
@@ -115,7 +115,7 @@ export const LoginPage = () => {
                   required
                   minLength={6}
                   autoComplete="new-password"
-                  className="w-full px-4 py-2.5 bg-blue-200 dark:bg-zinc-800 border border-blue-400 dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-600 transition"
+                  className="w-full px-4 py-2.5 bg-[#fff7ef] dark:bg-zinc-800 border border-[#e9d7c4] dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 text-[#2a1f16] dark:text-zinc-100 placeholder-[#b89b7c] dark:placeholder-zinc-600 transition"
                   disabled={loading}
                 />
               </div>
@@ -123,13 +123,13 @@ export const LoginPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-4 py-3 bg-orange-600 hover:bg-orange-500 disabled:bg-blue-300 dark:disabled:bg-zinc-800 disabled:text-slate-400 dark:disabled:text-zinc-600 text-white rounded-xl font-semibold transition mt-2"
+              className="w-full px-4 py-3 bg-orange-600 hover:bg-orange-500 disabled:bg-[#ead9c8] dark:disabled:bg-zinc-800 disabled:text-[#9b7a58] dark:disabled:text-zinc-600 text-white rounded-xl font-semibold transition mt-2"
             >
               {loading ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
             </button>
           </form>
 
-          <p className="text-center text-zinc-400 dark:text-zinc-500 text-sm mt-6">
+          <p className="text-center text-[#8f7353] dark:text-zinc-500 text-sm mt-6">
             {isLogin ? "Don't have an account? " : 'Already have an account? '}
             <button
               onClick={switchMode}

@@ -136,10 +136,10 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
   };
 
   return (
-    <div className={`bg-blue-300 dark:bg-zinc-900 rounded-2xl p-6 border transition-colors duration-200 ${
+    <div className={`bg-[#fff8f0] dark:bg-zinc-900 rounded-2xl p-6 border shadow-[0_16px_30px_rgba(120,53,15,0.08)] transition-colors duration-200 ${
       target.is_done
-        ? 'border-blue-400 dark:border-zinc-800 opacity-50'
-        : 'border-blue-400 dark:border-zinc-800 hover:border-blue-500 dark:hover:border-zinc-700'
+        ? 'border-[#ead9c8] dark:border-zinc-800 opacity-50'
+        : 'border-[#ead9c8] dark:border-zinc-800 hover:border-[#ddb892] dark:hover:border-zinc-700'
     }`}>
       {error && <div className="bg-red-50 dark:bg-red-950 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 p-2 rounded mb-3 text-sm">{error}</div>}
 
@@ -147,26 +147,26 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
       <div className="flex justify-between items-start mb-5">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3">
-            <h3 className={`text-xl font-bold transition ${target.is_done ? 'text-zinc-400 dark:text-zinc-600 line-through' : 'text-zinc-800 dark:text-zinc-100'}`}>
+            <h3 className={`text-xl font-bold transition ${target.is_done ? 'text-[#b89b7c] dark:text-zinc-600 line-through' : 'text-[#2a1f16] dark:text-zinc-100'}`}>
               {target.name}
             </h3>
             <button
               onClick={confirmDelete}
               disabled={loading}
-              className="text-zinc-400 dark:text-zinc-600 hover:text-red-400 font-bold text-lg transition w-7 h-7 rounded-full border-2 border-orange-600 hover:border-red-400 flex items-center justify-center flex-shrink-0"
+              className="text-[#8f7353] dark:text-zinc-600 hover:text-red-400 font-bold text-lg transition w-7 h-7 rounded-full border-2 border-orange-600 hover:border-red-400 flex items-center justify-center flex-shrink-0"
               title="Delete"
             >
               ✕
             </button>
           </div>
           <div className="flex items-center gap-2 mt-1.5">
-            <span className="text-sm text-zinc-500">{target.progress_minutes} / {target.target_hours * 60} min</span>
-            <span className="text-zinc-600">·</span>
+            <span className="text-sm text-[#7c5f37] dark:text-zinc-500">{target.progress_minutes} / {target.target_hours * 60} min</span>
+            <span className="text-[#8f7353] dark:text-zinc-600">·</span>
             <select
               value={target.priority}
               onChange={(e) => handlePriorityChange(parseInt(e.target.value))}
               disabled={loading}
-              className="text-sm bg-transparent border-none outline-none text-zinc-500 cursor-pointer hover:text-zinc-300 transition"
+              className="text-sm bg-transparent border-none outline-none text-[#7c5f37] dark:text-zinc-500 cursor-pointer hover:text-[#2a1f16] dark:hover:text-zinc-300 transition"
             >
               {[1, 2, 3, 4, 5].map(p => (
                 <option key={p} value={p}>P{p}</option>
@@ -210,7 +210,7 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
           ) : (
             <div>
               <p className="text-4xl font-black text-orange-500 leading-none">{Math.round(progressPercentage)}%</p>
-              <p className="text-xs text-zinc-600 mt-1">
+              <p className="text-xs text-[#8f7353] dark:text-zinc-600 mt-1">
                 {Math.max(0, target.target_hours * 60 - target.progress_minutes)} min left
               </p>
             </div>
@@ -234,14 +234,14 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
         <button
           onClick={handleAddProgress}
           disabled={loading || target.is_done}
-          className="flex-1 px-4 py-3 bg-blue-200 dark:bg-zinc-800 hover:bg-blue-300 dark:hover:bg-zinc-700 disabled:bg-blue-100 dark:disabled:bg-zinc-900 text-slate-700 dark:text-zinc-200 disabled:text-slate-400 dark:disabled:text-zinc-700 border border-blue-400 dark:border-zinc-700 disabled:border-blue-300 dark:disabled:border-zinc-800 rounded-xl font-semibold transition hover:border-blue-500 dark:hover:border-zinc-600 disabled:cursor-not-allowed"
+          className="flex-1 px-4 py-3 bg-[#fff7ef] dark:bg-zinc-800 hover:bg-[#f8ede0] dark:hover:bg-zinc-700 disabled:bg-[#ead9c8] dark:disabled:bg-zinc-900 text-[#3b2b1f] dark:text-zinc-200 disabled:text-[#9b7a58] dark:disabled:text-zinc-700 border border-[#e9d7c4] dark:border-zinc-700 disabled:border-[#ead9c8] dark:disabled:border-zinc-800 rounded-xl font-semibold transition hover:border-[#ddb892] dark:hover:border-zinc-600 disabled:cursor-not-allowed"
         >
           {loading ? '↑ Adding...' : '+1 (15 min)'}
         </button>
         <button
           onClick={handleReset}
           disabled={loading || target.is_done}
-          className="flex-1 px-4 py-3 bg-blue-200 dark:bg-zinc-800 hover:bg-blue-300 dark:hover:bg-zinc-700 disabled:bg-blue-100 dark:disabled:bg-zinc-900 text-slate-700 dark:text-zinc-200 disabled:text-slate-400 dark:disabled:text-zinc-700 border border-blue-400 dark:border-zinc-700 disabled:border-blue-300 dark:disabled:border-zinc-800 rounded-xl font-semibold transition hover:border-blue-500 dark:hover:border-zinc-600 disabled:cursor-not-allowed"
+          className="flex-1 px-4 py-3 bg-[#fff7ef] dark:bg-zinc-800 hover:bg-[#f8ede0] dark:hover:bg-zinc-700 disabled:bg-[#ead9c8] dark:disabled:bg-zinc-900 text-[#3b2b1f] dark:text-zinc-200 disabled:text-[#9b7a58] dark:disabled:text-zinc-700 border border-[#e9d7c4] dark:border-zinc-700 disabled:border-[#ead9c8] dark:disabled:border-zinc-800 rounded-xl font-semibold transition hover:border-[#ddb892] dark:hover:border-zinc-600 disabled:cursor-not-allowed"
         >
           {loading ? '↓ Removing...' : '-1 (15 min)'}
         </button>
@@ -250,25 +250,25 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
-          <div className="bg-blue-300 dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-sm mx-4 border border-blue-400 dark:border-zinc-800">
-            <div className="flex justify-between items-center p-6 border-b border-blue-400 dark:border-zinc-800">
-              <h3 className="text-2xl font-bold text-slate-800 dark:text-zinc-100">Delete Target</h3>
+          <div className="bg-[#fff8f0] dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-sm mx-4 border border-[#ead9c8] dark:border-zinc-800">
+            <div className="flex justify-between items-center p-6 border-b border-[#ead9c8] dark:border-zinc-800">
+              <h3 className="text-2xl font-bold text-[#2a1f16] dark:text-zinc-100">Delete Target</h3>
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-200 text-2xl font-bold transition"
+                className="text-[#8f7353] dark:text-zinc-500 hover:text-[#2a1f16] dark:hover:text-zinc-200 text-2xl font-bold transition"
               >
                 ✕
               </button>
             </div>
             <div className="p-6">
-              <p className="text-slate-700 dark:text-zinc-300 mb-6">
+              <p className="text-[#3b2b1f] dark:text-zinc-300 mb-6">
                 Are you sure you want to delete <strong>"{target.name}"</strong>? This action cannot be undone.
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
                   disabled={loading}
-                  className="flex-1 px-4 py-3 bg-blue-200 dark:bg-zinc-800 hover:bg-blue-300 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 border border-blue-400 dark:border-zinc-700 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-3 bg-[#fff7ef] dark:bg-zinc-800 hover:bg-[#f8ede0] dark:hover:bg-zinc-700 text-[#3b2b1f] dark:text-zinc-200 border border-[#e9d7c4] dark:border-zinc-700 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Cancel
                 </button>
@@ -288,25 +288,25 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
       {/* Mark Done Confirmation Modal */}
       {showMarkDoneConfirm && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
-          <div className="bg-blue-300 dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-sm mx-4 border border-blue-400 dark:border-zinc-800">
-            <div className="flex justify-between items-center p-6 border-b border-blue-400 dark:border-zinc-800">
-              <h3 className="text-2xl font-bold text-slate-800 dark:text-zinc-100">Mark Done</h3>
+          <div className="bg-[#fff8f0] dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-sm mx-4 border border-[#ead9c8] dark:border-zinc-800">
+            <div className="flex justify-between items-center p-6 border-b border-[#ead9c8] dark:border-zinc-800">
+              <h3 className="text-2xl font-bold text-[#2a1f16] dark:text-zinc-100">Mark Done</h3>
               <button
                 onClick={() => setShowMarkDoneConfirm(false)}
-                className="text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-200 text-2xl font-bold transition"
+                className="text-[#8f7353] dark:text-zinc-500 hover:text-[#2a1f16] dark:hover:text-zinc-200 text-2xl font-bold transition"
               >
                 ✕
               </button>
             </div>
             <div className="p-6">
-              <p className="text-slate-700 dark:text-zinc-300 mb-6">
+              <p className="text-[#3b2b1f] dark:text-zinc-300 mb-6">
                 Mark <strong>"{target.name}"</strong> as complete?
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowMarkDoneConfirm(false)}
                   disabled={loading}
-                  className="flex-1 px-4 py-3 bg-blue-200 dark:bg-zinc-800 hover:bg-blue-300 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 border border-blue-400 dark:border-zinc-700 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-3 bg-[#fff7ef] dark:bg-zinc-800 hover:bg-[#f8ede0] dark:hover:bg-zinc-700 text-[#3b2b1f] dark:text-zinc-200 border border-[#e9d7c4] dark:border-zinc-700 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Cancel
                 </button>

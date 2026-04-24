@@ -45,7 +45,7 @@ export const TargetForm: React.FC<TargetFormProps> = ({ onTargetCreated }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
         <div>
-          <label className="block text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-2">
+          <label className="block text-sm font-semibold text-[#7c5f37] dark:text-zinc-400 mb-2">
             Target Name
           </label>
           <input
@@ -53,13 +53,13 @@ export const TargetForm: React.FC<TargetFormProps> = ({ onTargetCreated }) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g., Learning React"
-            className="w-full px-4 py-2.5 bg-blue-200 dark:bg-zinc-800 border border-blue-400 dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-600 transition"
+            className="w-full px-4 py-2.5 bg-[#fff7ef] dark:bg-zinc-800 border border-[#e9d7c4] dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-[#2a1f16] dark:text-zinc-100 placeholder-[#b89b7c] dark:placeholder-zinc-600 transition"
             disabled={loading}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-2">
+          <label className="block text-sm font-semibold text-[#7c5f37] dark:text-zinc-400 mb-2">
             Target (Hours)
           </label>
           <input
@@ -69,7 +69,7 @@ export const TargetForm: React.FC<TargetFormProps> = ({ onTargetCreated }) => {
             placeholder="e.g., 10"
             step="0.5"
             min="0.5"
-            className="w-full px-4 py-2.5 bg-blue-200 dark:bg-zinc-800 border border-blue-400 dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-600 transition"
+            className="w-full px-4 py-2.5 bg-[#fff7ef] dark:bg-zinc-800 border border-[#e9d7c4] dark:border-zinc-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-[#2a1f16] dark:text-zinc-100 placeholder-[#b89b7c] dark:placeholder-zinc-600 transition"
             disabled={loading}
           />
         </div>
@@ -78,7 +78,7 @@ export const TargetForm: React.FC<TargetFormProps> = ({ onTargetCreated }) => {
       <button
         type="submit"
         disabled={loading}
-        className="w-full px-4 py-3 bg-orange-600 hover:bg-orange-500 disabled:bg-blue-300 dark:disabled:bg-zinc-800 disabled:text-slate-400 dark:disabled:text-zinc-600 text-white rounded-xl font-semibold transition transform hover:shadow-lg disabled:shadow-none disabled:cursor-not-allowed"
+        className="w-full px-4 py-3 bg-orange-600 hover:bg-orange-500 disabled:bg-[#ead9c8] dark:disabled:bg-zinc-800 disabled:text-[#9b7a58] dark:disabled:text-zinc-600 text-white rounded-xl font-semibold transition transform hover:shadow-lg disabled:shadow-none disabled:cursor-not-allowed"
       >
         {loading ? 'Creating...' : '✓ Create Target'}
       </button>
