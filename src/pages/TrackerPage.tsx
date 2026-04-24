@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Target } from '../lib/supabase';
-import { targetsService } from '../lib/supabase';
+import { targetsService, authService } from '../lib/supabase';
 import { TargetForm } from '../components/TargetForm';
 import { TargetCard } from '../components/TargetCard';
 import { HeaderControls } from '../components/HeaderControls';
@@ -102,21 +102,21 @@ export const TrackerPage = () => {
           </div>
         </div>
       )}
-      <div className="max-w-5xl mx-auto px-4 py-16">
+      <div className="w-full lg:max-w-5xl lg:mx-auto px-4 py-8 sm:py-12 md:py-16">
         {/* Header */}
         <div className="mb-12">
-          <div className="flex items-start justify-between gap-4 mb-6">
+          <div className="flex items-start justify-between gap-4 mb-3">
             <div className="min-w-0">
-              <h1 className="text-3xl sm:text-6xl font-bold text-[#2a1f16] dark:text-zinc-100 mb-2">Progress Tracker</h1>
+              <h1 className="text-3xl font-bold text-[#2a1f16] dark:text-zinc-100 mb-2">Progress Tracker</h1>
               <p className="text-[#7c5f37] dark:text-zinc-500 text-sm sm:text-lg">Track your goals with clarity and purpose</p>
             </div>
             <div className="flex flex-col gap-3 items-end flex-shrink-0">
-              {/* Row 1: [Theme] [Mode] [Out →] */}
+              {/* Row 1: [Theme] [Mode] */}
               <HeaderControls />
               {/* Row 2: [− Done Targets] */}
               <button
                 onClick={() => setShowDone(!showDone)}
-                className={`w-36 sm:w-52 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold text-sm sm:text-base transition transform hover:scale-105 whitespace-nowrap shadow-lg ${
+                className={`w-28 sm:w-36 md:w-52 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-xl font-semibold text-xs sm:text-sm md:text-base transition transform hover:scale-105 whitespace-nowrap shadow-lg ${
                   showDone
                     ? 'bg-[#fff7ef] dark:bg-zinc-800 text-[#3b2b1f] dark:text-zinc-200 hover:bg-[#f8ede0] dark:hover:bg-zinc-700 border border-[#e9d7c4] dark:border-zinc-700'
                     : 'bg-orange-600 text-white hover:bg-orange-500'
@@ -127,13 +127,27 @@ export const TrackerPage = () => {
               {/* Row 3: [+ New Target] */}
               <button
                 onClick={() => setShowForm(true)}
-                className="w-36 sm:w-52 px-4 sm:px-6 py-2.5 sm:py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-semibold text-sm sm:text-base transition transform hover:scale-105 whitespace-nowrap shadow-lg hover:shadow-orange-900/40"
+                className="w-28 sm:w-36 md:w-52 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-semibold text-xs sm:text-sm md:text-base transition transform hover:scale-105 whitespace-nowrap shadow-lg hover:shadow-orange-900/40"
               >
                 + New Target
               </button>
             </div>
           </div>
-          <p className="text-[#8f7353] dark:text-zinc-600 text-sm">{user?.email}</p>
+          {/* Email + sign-out icon, grouped left */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-[#8f7353] dark:text-zinc-600 text-sm">{user?.email}</span>
+            <button
+              onClick={() => authService.signOut()}
+              title="Sign out"
+              className="text-[#b09070] dark:text-zinc-700 hover:text-red-500 dark:hover:text-red-400 transition-colors p-0 bg-transparent border-none cursor-pointer flex items-center"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Error Message */}
