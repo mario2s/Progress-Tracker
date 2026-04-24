@@ -3,7 +3,7 @@ import type { Target } from '../lib/supabase';
 import { targetsService, authService } from '../lib/supabase';
 import { TargetForm } from '../components/TargetForm';
 import { TargetCard } from '../components/TargetCard';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/useAuth';
 import { ThemeToggleButton } from '../components/ThemeToggleButton';
 import { useAppMode } from '../contexts/AppModeContext';
 
