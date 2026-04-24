@@ -1,9 +1,10 @@
 # Progress Tracker App
 
-A modern progress tracking application built with React, TypeScript, Vite, Tailwind CSS, and Supabase.
+A modern progress tracking application designed for people with ADHD. It helps users set clear targets, stay focused, and build momentum toward their goals by tracking visible progress. That steady progress can provide the dopamine boost and confidence needed to keep going.
 
 ## Features
 
+- Designed for people with ADHD who benefit from clear targets, visible progress, and small wins
 - ✅ Create targets with name and duration in hours
 - ✅ Track progress with +1 button (adds 15 minutes)
 - ✅ Real-time progress bar visualization
