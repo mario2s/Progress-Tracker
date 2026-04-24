@@ -233,8 +233,8 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
       </div>
 
       {/* Progress panel: mins info (left) | % or action button (right) */}
-      <div className="flex items-stretch gap-0 mb-5 bg-[#f5ece1] dark:bg-zinc-800 rounded-xl border border-[#e9d7c4] dark:border-zinc-700 overflow-hidden">
-        <div className="flex-1 flex flex-col justify-center px-4 py-3">
+      <div className="flex items-stretch gap-0 mb-5">
+        <div className="flex-1 flex flex-col justify-center px-0 py-2">
           <span className="text-sm text-[#7c5f37] dark:text-zinc-500">{target.progress_minutes} / {target.target_hours * 60} min</span>
           {progressPercentage < 100 && (
             <span className="text-xs text-[#8f7353] dark:text-zinc-600 mt-0.5">
@@ -244,32 +244,32 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
         </div>
         <div className="flex items-center justify-center px-4 self-stretch">
           {target.is_done ? (
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex flex-col items-center gap-0.5">
               <button
                 onClick={confirmMarkAsDone}
                 disabled={loading}
-                className="px-4 py-2 bg-orange-500 hover:bg-orange-400 text-white font-bold rounded-xl text-sm transition disabled:opacity-50"
+                className="px-3 py-1.5 bg-orange-500 hover:bg-orange-400 text-white font-bold rounded-lg text-xs transition disabled:opacity-50"
               >
                 ✓ Done
               </button>
               {progressPercentage > 100 && (
                 <span className="text-xs font-black px-2 py-0.5 rounded-md" style={{ background: '#78350f', color: '#fbbf24' }}>
-                  +{Math.round(progressPercentage - 100)}% extra
+                  +{Math.round(progressPercentage - 100)}%
                 </span>
               )}
             </div>
           ) : progressPercentage >= 100 ? (
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex flex-col items-center gap-0.5">
               <button
                 onClick={confirmMarkAsDone}
                 disabled={loading}
-                className="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-xl text-sm transition disabled:opacity-50 pulse-btn"
+                className="px-3 py-1.5 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-lg text-xs transition disabled:opacity-50 pulse-btn"
               >
                 Mark Done ✓
               </button>
               {progressPercentage > 100 && (
                 <span className="text-xs font-black px-2 py-0.5 rounded-md" style={{ background: '#78350f', color: '#fbbf24' }}>
-                  +{Math.round(progressPercentage - 100)}% extra
+                  +{Math.round(progressPercentage - 100)}%
                 </span>
               )}
             </div>
