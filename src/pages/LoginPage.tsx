@@ -53,10 +53,10 @@ export const LoginPage = () => {
 
         <div className="bg-[#fff8f0] dark:bg-zinc-900 rounded-2xl border border-[#ead9c8] dark:border-zinc-800 p-8 shadow-[0_16px_30px_rgba(120,53,15,0.08)]">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-[#2a1f16] dark:text-zinc-100">
+            <h2 className="text-2xl font-bold text-[#2a1f16] dark:text-zinc-100 whitespace-nowrap">
               {isLogin ? 'Sign In' : 'Create Account'}
             </h2>
-            <HeaderControls />
+            <HeaderControls className="w-32 sm:w-36" />
           </div>
 
           {error && (

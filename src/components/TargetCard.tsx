@@ -22,6 +22,9 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showMarkDoneConfirm, setShowMarkDoneConfirm] = useState(false);
   const [showDueDate, setShowDueDate] = useState(false);
+  const [showFullName, setShowFullName] = useState(false);
+  const isLongName = target.name.length > 20;
+  const displayName = isLongName ? target.name.slice(0, 20) + '...' : target.name;
 
   const progressPercentage = timeUtils.getProgressPercentage(
     target.progress_minutes,
@@ -155,9 +158,13 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
       {/* Header */}
       <div className="flex justify-between items-start mb-5">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3">
-            <h3 className={`text-xl font-bold transition ${target.is_done ? 'text-[#b89b7c] dark:text-zinc-600 line-through' : 'text-[#2a1f16] dark:text-zinc-100'}`}>
-              {target.name}
+          <div className="flex items-center gap-2 min-w-0">
+            <h3
+              className={`text-xl font-bold transition ${isLongName ? 'cursor-pointer hover:opacity-70' : ''} ${target.is_done ? 'text-[#b89b7c] dark:text-zinc-600 line-through' : 'text-[#2a1f16] dark:text-zinc-100'}`}
+              onClick={isLongName ? () => setShowFullName(true) : undefined}
+              title={isLongName ? target.name : undefined}
+            >
+              {displayName}
             </h3>
             {/* Due date — Q: icon toggle, S: always visible */}
             {target.due_date && (
@@ -280,6 +287,34 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
         </button>
       </div>
       </div>
+
+      {/* Full Name Modal */}
+      {showFullName && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
+          <div className="bg-[#fff8f0] dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-md mx-4 border border-[#ead9c8] dark:border-zinc-800">
+            <div className="flex justify-between items-center p-6 border-b border-[#ead9c8] dark:border-zinc-800">
+              <h3 className="text-2xl font-bold text-[#2a1f16] dark:text-zinc-100">Target Name</h3>
+              <button
+                onClick={() => setShowFullName(false)}
+                className="text-[#8f7353] dark:text-zinc-500 hover:text-[#2a1f16] dark:hover:text-zinc-200 text-2xl font-bold transition"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="p-6">
+              <p className="text-lg text-[#2a1f16] dark:text-zinc-100 break-words">{target.name}</p>
+            </div>
+            <div className="p-6 border-t border-[#ead9c8] dark:border-zinc-800">
+              <button
+                onClick={() => setShowFullName(false)}
+                className="w-full px-4 py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-semibold transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
