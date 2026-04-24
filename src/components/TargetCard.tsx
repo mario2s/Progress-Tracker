@@ -171,70 +171,80 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
       <div className={target.is_done ? 'opacity-50' : ''}>
       {error && <div className="bg-red-50 dark:bg-red-950 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 p-2 rounded mb-3 text-sm">{error}</div>}
 
-      {/* Header */}
-      <div className="flex justify-between items-start mb-5">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 min-w-0">
-            <h3
-              className={`text-xl font-bold transition ${isLongName ? 'cursor-pointer hover:opacity-70' : ''} ${target.is_done ? 'text-[#b89b7c] dark:text-zinc-600 line-through' : 'text-[#2a1f16] dark:text-zinc-100'}`}
-              onClick={isLongName ? () => setShowFullName(true) : undefined}
-              title={isLongName ? target.name : undefined}
-            >
-              {displayName}
-            </h3>
-            {/* Due date — Q: icon toggle, S: always visible */}
-            {target.due_date && (
-              mode === 'quiet' ? (
-                <>
-                  <button
-                    onClick={() => setShowDueDate(v => !v)}
-                    title={showDueDate ? 'Hide due date' : 'Show due date'}
-                    className="text-[#8f7353] dark:text-zinc-500 hover:text-orange-500 transition flex-shrink-0"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                      <line x1="16" y1="2" x2="16" y2="6"/>
-                      <line x1="8" y1="2" x2="8" y2="6"/>
-                      <line x1="3" y1="10" x2="21" y2="10"/>
-                    </svg>
-                  </button>
-                  {showDueDate && (
-                    <span className="text-xs text-[#7c5f37] dark:text-zinc-500 flex-shrink-0">{formatDueDate(target.due_date)}</span>
-                  )}
-                </>
-              ) : (
-                <span className="text-xs text-[#7c5f37] dark:text-zinc-500 flex-shrink-0">{formatDueDate(target.due_date)}</span>
-              )
-            )}
-            <button
-              onClick={confirmDelete}
-              disabled={loading}
-              className="text-[#8f7353] dark:text-zinc-600 hover:text-red-400 font-bold text-lg transition w-7 h-7 rounded-full border-2 border-orange-600 hover:border-red-400 flex items-center justify-center flex-shrink-0"
-              title="Delete"
-            >
-              ✕
-            </button>
-          </div>
-          <div className="flex items-center gap-2 mt-1.5">
-            <span className="text-sm text-[#7c5f37] dark:text-zinc-500">{target.progress_minutes} / {target.target_hours * 60} min</span>
-            <span className="text-[#8f7353] dark:text-zinc-600">·</span>
-            <select
-              value={target.priority}
-              onChange={(e) => handlePriorityChange(parseInt(e.target.value))}
-              disabled={loading}
-              className="text-sm bg-transparent border-none outline-none text-[#7c5f37] dark:text-zinc-500 cursor-pointer hover:text-[#2a1f16] dark:hover:text-zinc-300 transition"
-            >
-              {[1, 2, 3, 4, 5].map(p => (
-                <option key={p} value={p}>P{p}</option>
-              ))}
-            </select>
-          </div>
-        </div>
+      {/* Title row: name + X */}
+      <div className="flex items-start justify-between gap-2 mb-2">
+        <h3
+          className={`text-xl font-bold transition ${isLongName ? 'cursor-pointer hover:opacity-70' : ''} ${target.is_done ? 'text-[#b89b7c] dark:text-zinc-600 line-through' : 'text-[#2a1f16] dark:text-zinc-100'}`}
+          onClick={isLongName ? () => setShowFullName(true) : undefined}
+          title={isLongName ? target.name : undefined}
+        >
+          {displayName}
+        </h3>
+        <button
+          onClick={confirmDelete}
+          disabled={loading}
+          className="text-[#8f7353] dark:text-zinc-600 hover:text-red-400 font-bold text-lg transition w-7 h-7 rounded-full border-2 border-orange-600 hover:border-red-400 flex items-center justify-center flex-shrink-0"
+          title="Delete"
+        >
+          ✕
+        </button>
+      </div>
 
-        {/* Top-right: % below 100%, Mark Done at/above 100%, ✓ Done if finished */}
-        <div className="flex-shrink-0 ml-4 text-right">
+      {/* Meta row: date · priority */}
+      <div className="flex items-center gap-2 flex-wrap mb-3">
+        {/* Due date — Q: icon toggle, S: always visible */}
+        {target.due_date && (
+          mode === 'quiet' ? (
+            <>
+              <button
+                onClick={() => setShowDueDate(v => !v)}
+                title={showDueDate ? 'Hide due date' : 'Show due date'}
+                className="text-[#8f7353] dark:text-zinc-500 hover:text-orange-500 transition flex-shrink-0"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </button>
+              {showDueDate && (
+                <span className="text-xs text-[#7c5f37] dark:text-zinc-500">{formatDueDate(target.due_date)}</span>
+              )}
+              <span className="text-[#8f7353] dark:text-zinc-600">·</span>
+            </>
+          ) : (
+            <>
+              <span className="text-xs text-[#7c5f37] dark:text-zinc-500">{formatDueDate(target.due_date)}</span>
+              <span className="text-[#8f7353] dark:text-zinc-600">·</span>
+            </>
+          )
+        )}
+        <select
+          value={target.priority}
+          onChange={(e) => handlePriorityChange(parseInt(e.target.value))}
+          disabled={loading}
+          className="text-sm bg-transparent border-none outline-none text-[#7c5f37] dark:text-zinc-500 cursor-pointer hover:text-[#2a1f16] dark:hover:text-zinc-300 transition"
+        >
+          {[1, 2, 3, 4, 5].map(p => (
+            <option key={p} value={p}>P{p}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Progress panel: mins info (left) | % or action button (right) */}
+      <div className="flex items-stretch gap-0 mb-5 bg-[#f5ece1] dark:bg-zinc-800 rounded-xl border border-[#e9d7c4] dark:border-zinc-700 overflow-hidden">
+        <div className="flex-1 flex flex-col justify-center px-4 py-3">
+          <span className="text-sm text-[#7c5f37] dark:text-zinc-500">{target.progress_minutes} / {target.target_hours * 60} min</span>
+          {progressPercentage < 100 && (
+            <span className="text-xs text-[#8f7353] dark:text-zinc-600 mt-0.5">
+              {Math.max(0, target.target_hours * 60 - target.progress_minutes)} min left
+            </span>
+          )}
+        </div>
+        <div className="flex items-center justify-center px-4 self-stretch">
           {target.is_done ? (
-            <div className="flex flex-col items-end gap-1.5">
+            <div className="flex flex-col items-center gap-1">
               <button
                 onClick={confirmMarkAsDone}
                 disabled={loading}
@@ -249,7 +259,7 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
               )}
             </div>
           ) : progressPercentage >= 100 ? (
-            <div className="flex flex-col items-end gap-1.5">
+            <div className="flex flex-col items-center gap-1">
               <button
                 onClick={confirmMarkAsDone}
                 disabled={loading}
@@ -264,12 +274,7 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
               )}
             </div>
           ) : (
-            <div>
-              <p className="text-4xl font-black text-orange-500 leading-none">{Math.round(progressPercentage)}%</p>
-              <p className="text-xs text-[#8f7353] dark:text-zinc-600 mt-1">
-                {Math.max(0, target.target_hours * 60 - target.progress_minutes)} min left
-              </p>
-            </div>
+            <p className="text-4xl font-black text-orange-500 leading-none">{Math.round(progressPercentage)}%</p>
           )}
         </div>
       </div>
