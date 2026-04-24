@@ -117,7 +117,8 @@ export const TrackerPage = () => {
               <p className="text-[#7c5f37] dark:text-zinc-500 text-sm sm:text-lg">Track your goals with clarity and purpose</p>
             </div>
             <div className="flex flex-col gap-3 items-end flex-shrink-0">
-              <div className="w-48 sm:w-64 flex gap-3">
+              {/* Row 1: [Theme] [Mode] [Out →] */}
+              <div className="w-36 sm:w-52 flex gap-3">
                 <ThemeToggleButton />
                 <button
                   onClick={toggleMode}
@@ -130,12 +131,13 @@ export const TrackerPage = () => {
                   onClick={handleSignOut}
                   className="flex-1 py-2.5 sm:py-3 bg-[#fff7ef] dark:bg-zinc-800 hover:bg-[#f8ede0] dark:hover:bg-zinc-700 text-[#3b2b1f] dark:text-zinc-200 rounded-xl font-semibold text-sm sm:text-base transition transform hover:scale-105 border border-[#e9d7c4] dark:border-zinc-700 shadow-lg whitespace-nowrap"
                 >
-                  Sign out →
+                  Out →
                 </button>
               </div>
+              {/* Row 2: [− Done Targets] */}
               <button
                 onClick={() => setShowDone(!showDone)}
-                className={`w-36 sm:w-48 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold text-sm sm:text-base transition transform hover:scale-105 whitespace-nowrap shadow-lg ${
+                className={`w-36 sm:w-52 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold text-sm sm:text-base transition transform hover:scale-105 whitespace-nowrap shadow-lg ${
                   showDone
                     ? 'bg-[#fff7ef] dark:bg-zinc-800 text-[#3b2b1f] dark:text-zinc-200 hover:bg-[#f8ede0] dark:hover:bg-zinc-700 border border-[#e9d7c4] dark:border-zinc-700'
                     : 'bg-orange-600 text-white hover:bg-orange-500'
@@ -143,9 +145,10 @@ export const TrackerPage = () => {
               >
                 {showDone ? '− Done Targets' : '+ Done Targets'}
               </button>
+              {/* Row 3: [+ New Target] */}
               <button
                 onClick={() => setShowForm(true)}
-                className="w-36 sm:w-48 px-4 sm:px-6 py-2.5 sm:py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-semibold text-sm sm:text-base transition transform hover:scale-105 whitespace-nowrap shadow-lg hover:shadow-orange-900/40"
+                className="w-36 sm:w-52 px-4 sm:px-6 py-2.5 sm:py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-semibold text-sm sm:text-base transition transform hover:scale-105 whitespace-nowrap shadow-lg hover:shadow-orange-900/40"
               >
                 + New Target
               </button>
