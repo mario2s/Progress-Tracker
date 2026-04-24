@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Target } from '../lib/supabase';
-import { targetsService, authService } from '../lib/supabase';
+import { targetsService } from '../lib/supabase';
 import { TargetForm } from '../components/TargetForm';
 import { TargetCard } from '../components/TargetCard';
+import { HeaderControls } from '../components/HeaderControls';
 import { useAuth } from '../contexts/useAuth';
-import { ThemeToggleButton } from '../components/ThemeToggleButton';
-import { useAppMode } from '../contexts/AppModeContext';
 
 export const TrackerPage = () => {
   const { user } = useAuth();
-  const { mode, toggleMode } = useAppMode();
   const [targets, setTargets] = useState<Target[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -50,10 +48,6 @@ export const TrackerPage = () => {
 
   const handleTargetDelete = (id: string) => {
     setTargets(targets.filter(t => t.id !== id));
-  };
-
-  const handleSignOut = async () => {
-    await authService.signOut();
   };
 
   const visibleTargets = targets.filter(t => showDone ? true : !t.is_done);
@@ -118,22 +112,7 @@ export const TrackerPage = () => {
             </div>
             <div className="flex flex-col gap-3 items-end flex-shrink-0">
               {/* Row 1: [Theme] [Mode] [Out →] */}
-              <div className="w-36 sm:w-52 flex gap-3">
-                <ThemeToggleButton />
-                <button
-                  onClick={toggleMode}
-                  title={mode === 'quiet' ? 'Switch to Stimulating mode' : 'Switch to Quiet mode'}
-                  className="w-11 h-11 sm:w-12 sm:h-12 bg-[#fff7ef] dark:bg-zinc-800 hover:bg-[#f8ede0] dark:hover:bg-zinc-700 text-[#3b2b1f] dark:text-zinc-100 transition transform hover:scale-105 rounded-xl border border-[#e9d7c4] dark:border-zinc-700 shadow-lg flex items-center justify-center flex-shrink-0 text-base"
-                >
-                  {mode === 'quiet' ? '🔕' : '🎮'}
-                </button>
-                <button
-                  onClick={handleSignOut}
-                  className="flex-1 py-2.5 sm:py-3 bg-[#fff7ef] dark:bg-zinc-800 hover:bg-[#f8ede0] dark:hover:bg-zinc-700 text-[#3b2b1f] dark:text-zinc-200 rounded-xl font-semibold text-sm sm:text-base transition transform hover:scale-105 border border-[#e9d7c4] dark:border-zinc-700 shadow-lg whitespace-nowrap"
-                >
-                  Out →
-                </button>
-              </div>
+              <HeaderControls />
               {/* Row 2: [− Done Targets] */}
               <button
                 onClick={() => setShowDone(!showDone)}
