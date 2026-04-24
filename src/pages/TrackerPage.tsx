@@ -5,9 +5,11 @@ import { TargetForm } from '../components/TargetForm';
 import { TargetCard } from '../components/TargetCard';
 import { useAuth } from '../contexts/AuthContext';
 import { ThemeToggleButton } from '../components/ThemeToggleButton';
+import { useAppMode } from '../contexts/AppModeContext';
 
 export const TrackerPage = () => {
   const { user } = useAuth();
+  const { mode, toggleMode } = useAppMode();
   const [targets, setTargets] = useState<Target[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -115,8 +117,15 @@ export const TrackerPage = () => {
               <p className="text-[#7c5f37] dark:text-zinc-500 text-sm sm:text-lg">Track your goals with clarity and purpose</p>
             </div>
             <div className="flex flex-col gap-3 items-end flex-shrink-0">
-              <div className="w-36 sm:w-48 flex gap-3">
+              <div className="w-48 sm:w-64 flex gap-3">
                 <ThemeToggleButton />
+                <button
+                  onClick={toggleMode}
+                  title={mode === 'quiet' ? 'Switch to Stimulating mode' : 'Switch to Quiet mode'}
+                  className="aspect-square py-2.5 sm:py-3 px-2.5 sm:px-3 bg-[#fff7ef] dark:bg-zinc-800 hover:bg-[#f8ede0] dark:hover:bg-zinc-700 text-[#3b2b1f] dark:text-zinc-100 transition transform hover:scale-105 rounded-xl border border-[#e9d7c4] dark:border-zinc-700 shadow-lg flex items-center justify-center flex-shrink-0 text-base"
+                >
+                  {mode === 'quiet' ? '🔕' : '🎮'}
+                </button>
                 <button
                   onClick={handleSignOut}
                   className="flex-1 py-2.5 sm:py-3 bg-[#fff7ef] dark:bg-zinc-800 hover:bg-[#f8ede0] dark:hover:bg-zinc-700 text-[#3b2b1f] dark:text-zinc-200 rounded-xl font-semibold text-sm sm:text-base transition transform hover:scale-105 border border-[#e9d7c4] dark:border-zinc-700 shadow-lg whitespace-nowrap"
