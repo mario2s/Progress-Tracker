@@ -55,6 +55,7 @@ const SortableTargetItem: React.FC<SortableTargetItemProps> = ({ target, onUpdat
 
 export const TrackerPage = () => {
   const { user } = useAuth();
+  const appVersion = import.meta.env.VITE_APP_VERSION ?? '0.0.0';
   const [targets, setTargets] = useState<Target[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -358,6 +359,7 @@ export const TrackerPage = () => {
         {/* Footer */}
         <div className="mt-16 text-center text-[#8f7353] dark:text-zinc-700 text-sm">
           <p>Build with NS and AI by MD</p>
+          <p className="mt-1 text-xs">v{appVersion}</p>
         </div>
       </div>
     </div>
