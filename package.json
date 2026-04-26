@@ -1,13 +1,15 @@
 {
   "name": "progress-tracker",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.7.10",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "version:bump": "node scripts/bump-version.mjs --increment",
+    "version:set": "node scripts/bump-version.mjs --set"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

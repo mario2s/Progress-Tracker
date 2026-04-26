@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+
+node scripts/bump-version.mjs --increment
+git add package.json package-lock.json
