@@ -14,10 +14,10 @@ interface TargetCardProps {
   onUpdate: (target: Target) => void;
   onDelete: (id: string) => void;
   compact?: boolean;
-  dragHandleProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
+  dragRowProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
-export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDelete, compact = false, dragHandleProps }) => {
+export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDelete, compact = false, dragRowProps }) => {
   const { mode } = useAppMode();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -171,7 +171,11 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
           ? 'border-[#ead9c8] dark:border-zinc-800'
           : 'border-[#ead9c8] dark:border-zinc-800 hover:border-[#ddb892] dark:hover:border-zinc-700'
       }`}>
-        <div className={`flex items-center gap-3 min-w-0 ${target.is_done ? 'opacity-50' : ''}`}>
+        <div
+          {...dragRowProps}
+          className={`flex items-center gap-3 min-w-0 ${target.is_done ? 'opacity-50' : ''}`}
+          style={{ touchAction: 'none', ...(dragRowProps?.style ?? {}) }}
+        >
           <div className="min-w-0 flex-1 flex items-center gap-3">
             <h3 className={`truncate text-base font-bold ${target.is_done ? 'text-[#b89b7c] dark:text-zinc-600 line-through' : 'text-[#2a1f16] dark:text-zinc-100'}`}>
               {target.name}
@@ -207,29 +211,14 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
 
       {/* Title row: name + X */}
       <div className="flex items-start justify-between gap-2 mb-2">
-        <div className="flex items-start gap-2 min-w-0 flex-1">
-          {dragHandleProps && (
-            <button
-              type="button"
-              aria-label="Reorder target"
-              title="Drag to reorder"
-              className="mt-0.5 text-[#8f7353] dark:text-zinc-600 hover:text-orange-500 active:cursor-grabbing cursor-grab transition flex-shrink-0 p-1"
-              {...dragHandleProps}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <circle cx="9" cy="6" r="1.5" />
-                <circle cx="15" cy="6" r="1.5" />
-                <circle cx="9" cy="12" r="1.5" />
-                <circle cx="15" cy="12" r="1.5" />
-                <circle cx="9" cy="18" r="1.5" />
-                <circle cx="15" cy="18" r="1.5" />
-              </svg>
-            </button>
-          )}
+        <div
+          {...dragRowProps}
+          className="flex items-start gap-2 min-w-0 flex-1 cursor-grab active:cursor-grabbing"
+          style={{ touchAction: 'none', ...(dragRowProps?.style ?? {}) }}
+        >
           <h3
             className={`text-xl font-bold transition min-w-0 ${isLongName ? 'cursor-pointer hover:opacity-70' : ''} ${target.is_done ? 'text-[#b89b7c] dark:text-zinc-600 line-through' : 'text-[#2a1f16] dark:text-zinc-100'}`}
             onClick={isLongName ? () => setShowFullName(true) : undefined}
-            onPointerDown={e => e.stopPropagation()}
             title={isLongName ? target.name : undefined}
           >
             {displayName}

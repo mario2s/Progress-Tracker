@@ -43,11 +43,11 @@ const SortableTargetItem: React.FC<SortableTargetItemProps> = ({ target, onUpdat
         onUpdate={onUpdate}
         onDelete={onDelete}
         compact={compact}
-        dragHandleProps={{
+        dragRowProps={{
           ...attributes,
           ...listeners,
-          'data-target-drag-handle': 'true',
-        } as React.ButtonHTMLAttributes<HTMLButtonElement>}
+          'data-target-drag-row': 'true',
+        } as React.HTMLAttributes<HTMLDivElement>}
       />
     </div>
   );
@@ -175,9 +175,9 @@ export const TrackerPage = () => {
   useEffect(() => {
     const onTouchStart = (e: TouchEvent) => {
       const target = e.target;
-      const startedOnDragHandle = target instanceof Element && target.closest('[data-target-drag-handle="true"]');
+      const startedOnDragRow = target instanceof Element && target.closest('[data-target-drag-row="true"]');
 
-      pullRefreshBlockedRef.current = isSortingRef.current || Boolean(startedOnDragHandle);
+      pullRefreshBlockedRef.current = isSortingRef.current || Boolean(startedOnDragRow);
       if (pullRefreshBlockedRef.current) {
         pullStartY.current = null;
         setPullDistance(0);
