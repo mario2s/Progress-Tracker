@@ -6,6 +6,7 @@ import {
   closestCenter,
   useSensor,
   useSensors,
+  type DragStartEvent,
   type DragEndEvent,
 } from '@dnd-kit/core';
 import {
@@ -25,15 +26,17 @@ interface SortableTargetItemProps {
   target: Target;
   onUpdate: (target: Target) => void;
   onDelete: (id: string) => void;
+  compact: boolean;
 }
 
-const SortableTargetItem: React.FC<SortableTargetItemProps> = ({ target, onUpdate, onDelete }) => {
+const SortableTargetItem: React.FC<SortableTargetItemProps> = ({ target, onUpdate, onDelete, compact }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: target.id });
 
   return (
     <div
+      data-target-card-sortable="true"
       ref={setNodeRef}
-      style={{ transform: CSS.Transform.toString(transform), transition, touchAction: 'none', userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' } as React.CSSProperties}
+      style={{ transform: CSS.Transform.toString(transform), transition, touchAction: isDragging ? 'none' : 'pan-y', userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' } as React.CSSProperties}
       className={`cursor-grab active:cursor-grabbing${isDragging ? ' opacity-60 scale-[1.02] z-50' : ''}`}
       {...attributes}
       {...listeners}
@@ -42,6 +45,7 @@ const SortableTargetItem: React.FC<SortableTargetItemProps> = ({ target, onUpdat
         target={target}
         onUpdate={onUpdate}
         onDelete={onDelete}
+        compact={compact}
       />
     </div>
   );
@@ -54,10 +58,27 @@ export const TrackerPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [showDone, setShowDone] = useState(true);
+  const [isSorting, setIsSorting] = useState(false);
+  const isSortingRef = useRef(false);
+  const pullRefreshBlockedRef = useRef(false);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 8 } })
+    useSensor(TouchSensor, { activationConstraint: { delay: 300, tolerance: 5 } })
   );
+
+  useEffect(() => {
+    isSortingRef.current = isSorting;
+  }, [isSorting]);
+
+  // Lock document scroll while dragging so the dragged card doesn't fight the page
+  useEffect(() => {
+    if (isSorting) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isSorting]);
 
   useEffect(() => {
     loadTargets();
@@ -100,7 +121,12 @@ export const TrackerPage = () => {
     setTargets(targets.filter(t => t.id !== id));
   };
 
+  const handleDragStart = (_event: DragStartEvent) => {
+    setIsSorting(true);
+  };
+
   const handleDragEnd = async (event: DragEndEvent) => {
+    setIsSorting(false);
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -143,6 +169,10 @@ export const TrackerPage = () => {
     }
   };
 
+  const handleDragCancel = () => {
+    setIsSorting(false);
+  };
+
   const visibleTargets = targets.filter(t => showDone ? true : !t.is_done);
 
   // Pull-to-refresh
@@ -152,16 +182,30 @@ export const TrackerPage = () => {
 
   useEffect(() => {
     const onTouchStart = (e: TouchEvent) => {
-      if (window.scrollY === 0) pullStartY.current = e.touches[0].clientY;
+      const target = e.target;
+      const startedOnSortableCard = target instanceof Element && target.closest('[data-target-card-sortable="true"]');
+
+      pullRefreshBlockedRef.current = isSortingRef.current || Boolean(startedOnSortableCard);
+      if (pullRefreshBlockedRef.current) {
+        pullStartY.current = null;
+        setPullDistance(0);
+        return;
+      }
+
+      if (window.scrollY === 0) {
+        pullStartY.current = e.touches[0].clientY;
+      }
     };
     const onTouchMove = (e: TouchEvent) => {
+      if (pullRefreshBlockedRef.current || isSortingRef.current) return;
       if (pullStartY.current === null) return;
       const dist = Math.max(0, e.touches[0].clientY - pullStartY.current);
       if (dist > 0) setPullDistance(Math.min(dist, THRESHOLD + 20));
     };
     const onTouchEnd = () => {
-      if (pullDistance >= THRESHOLD) loadTargets();
+      if (!pullRefreshBlockedRef.current && pullDistance >= THRESHOLD) loadTargets();
       pullStartY.current = null;
+      pullRefreshBlockedRef.current = false;
       setPullDistance(0);
     };
     document.addEventListener('touchstart', onTouchStart, { passive: true });
@@ -296,7 +340,9 @@ export const TrackerPage = () => {
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
+                onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
+                onDragCancel={handleDragCancel}
               >
                 <SortableContext
                   items={visibleTargets.map(target => target.id)}
@@ -308,6 +354,7 @@ export const TrackerPage = () => {
                       target={target}
                       onUpdate={handleTargetUpdate}
                       onDelete={handleTargetDelete}
+                      compact={isSorting}
                     />
                   ))}
                 </SortableContext>

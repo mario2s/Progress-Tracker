@@ -13,9 +13,10 @@ interface TargetCardProps {
   target: Target;
   onUpdate: (target: Target) => void;
   onDelete: (id: string) => void;
+  compact?: boolean;
 }
 
-export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDelete }) => {
+export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDelete, compact = false }) => {
   const { mode } = useAppMode();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -161,6 +162,38 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
     if (isOver || i < filledCount) return 'flex-1 h-9 rounded-lg';
     return 'flex-1 h-9 rounded-lg';
   };
+
+  if (compact) {
+    return (
+      <div className={`bg-[#fff8f0] dark:bg-zinc-900 rounded-2xl px-4 py-3 border shadow-[0_10px_18px_rgba(120,53,15,0.08)] transition-all duration-200 ${
+        target.is_done
+          ? 'border-[#ead9c8] dark:border-zinc-800'
+          : 'border-[#ead9c8] dark:border-zinc-800 hover:border-[#ddb892] dark:hover:border-zinc-700'
+      }`}>
+        <div className={`flex items-center gap-3 min-w-0 ${target.is_done ? 'opacity-50' : ''}`}>
+          <div className="min-w-0 flex-1 flex items-center gap-3">
+            <h3 className={`truncate text-base font-bold ${target.is_done ? 'text-[#b89b7c] dark:text-zinc-600 line-through' : 'text-[#2a1f16] dark:text-zinc-100'}`}>
+              {target.name}
+            </h3>
+            <span className="text-xs font-semibold text-[#7c5f37] dark:text-zinc-500 whitespace-nowrap">P{target.priority}</span>
+            <span className="text-xs text-[#8f7353] dark:text-zinc-600 whitespace-nowrap">
+              {target.progress_minutes} / {target.target_hours * 60} min
+            </span>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {target.due_date && (
+              <span className="hidden sm:inline text-xs text-[#7c5f37] dark:text-zinc-500 whitespace-nowrap">
+                {formatDueDate(target.due_date)}
+              </span>
+            )}
+            <span className={`text-lg font-black whitespace-nowrap ${target.is_done ? 'text-[#b89b7c] dark:text-zinc-600' : 'text-orange-500'}`}>
+              {Math.round(progressPercentage)}%
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`bg-[#fff8f0] dark:bg-zinc-900 rounded-2xl p-6 border shadow-[0_16px_30px_rgba(120,53,15,0.08)] transition-colors duration-200 ${
