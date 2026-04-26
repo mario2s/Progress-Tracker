@@ -34,18 +34,20 @@ const SortableTargetItem: React.FC<SortableTargetItemProps> = ({ target, onUpdat
 
   return (
     <div
-      data-target-card-sortable="true"
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition, touchAction: isDragging ? 'none' : 'pan-y', userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' } as React.CSSProperties}
-      className={`cursor-grab active:cursor-grabbing${isDragging ? ' opacity-60 scale-[1.02] z-50' : ''}`}
-      {...attributes}
-      {...listeners}
+      className={isDragging ? 'opacity-60 scale-[1.02] z-50' : ''}
     >
       <TargetCard
         target={target}
         onUpdate={onUpdate}
         onDelete={onDelete}
         compact={compact}
+        dragHandleProps={{
+          ...attributes,
+          ...listeners,
+          'data-target-drag-handle': 'true',
+        } as React.ButtonHTMLAttributes<HTMLButtonElement>}
       />
     </div>
   );
@@ -173,9 +175,9 @@ export const TrackerPage = () => {
   useEffect(() => {
     const onTouchStart = (e: TouchEvent) => {
       const target = e.target;
-      const startedOnSortableCard = target instanceof Element && target.closest('[data-target-card-sortable="true"]');
+      const startedOnDragHandle = target instanceof Element && target.closest('[data-target-drag-handle="true"]');
 
-      pullRefreshBlockedRef.current = isSortingRef.current || Boolean(startedOnSortableCard);
+      pullRefreshBlockedRef.current = isSortingRef.current || Boolean(startedOnDragHandle);
       if (pullRefreshBlockedRef.current) {
         pullStartY.current = null;
         setPullDistance(0);

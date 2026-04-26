@@ -14,9 +14,10 @@ interface TargetCardProps {
   onUpdate: (target: Target) => void;
   onDelete: (id: string) => void;
   compact?: boolean;
+  dragHandleProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
 }
 
-export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDelete, compact = false }) => {
+export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDelete, compact = false, dragHandleProps }) => {
   const { mode } = useAppMode();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -206,14 +207,34 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
 
       {/* Title row: name + X */}
       <div className="flex items-start justify-between gap-2 mb-2">
-        <h3
-          className={`text-xl font-bold transition ${isLongName ? 'cursor-pointer hover:opacity-70' : ''} ${target.is_done ? 'text-[#b89b7c] dark:text-zinc-600 line-through' : 'text-[#2a1f16] dark:text-zinc-100'}`}
-          onClick={isLongName ? () => setShowFullName(true) : undefined}
-          onPointerDown={e => e.stopPropagation()}
-          title={isLongName ? target.name : undefined}
-        >
-          {displayName}
-        </h3>
+        <div className="flex items-start gap-2 min-w-0 flex-1">
+          {dragHandleProps && (
+            <button
+              type="button"
+              aria-label="Reorder target"
+              title="Drag to reorder"
+              className="mt-0.5 text-[#8f7353] dark:text-zinc-600 hover:text-orange-500 active:cursor-grabbing cursor-grab transition flex-shrink-0 p-1"
+              {...dragHandleProps}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="9" cy="6" r="1.5" />
+                <circle cx="15" cy="6" r="1.5" />
+                <circle cx="9" cy="12" r="1.5" />
+                <circle cx="15" cy="12" r="1.5" />
+                <circle cx="9" cy="18" r="1.5" />
+                <circle cx="15" cy="18" r="1.5" />
+              </svg>
+            </button>
+          )}
+          <h3
+            className={`text-xl font-bold transition min-w-0 ${isLongName ? 'cursor-pointer hover:opacity-70' : ''} ${target.is_done ? 'text-[#b89b7c] dark:text-zinc-600 line-through' : 'text-[#2a1f16] dark:text-zinc-100'}`}
+            onClick={isLongName ? () => setShowFullName(true) : undefined}
+            onPointerDown={e => e.stopPropagation()}
+            title={isLongName ? target.name : undefined}
+          >
+            {displayName}
+          </h3>
+        </div>
         <button
           onClick={confirmDelete}
           onPointerDown={e => e.stopPropagation()}
