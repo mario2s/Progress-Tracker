@@ -60,7 +60,9 @@ export const TrackerPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [showDone, setShowDone] = useState(true);
+  const [showDone, setShowDone] = useState<boolean>(() => {
+    return localStorage.getItem('showDoneTargets') !== 'false';
+  });
   const [isSorting, setIsSorting] = useState(false);
   const isSortingRef = useRef(false);
   const pullRefreshBlockedRef = useRef(false);
@@ -72,6 +74,10 @@ export const TrackerPage = () => {
   useEffect(() => {
     isSortingRef.current = isSorting;
   }, [isSorting]);
+
+  useEffect(() => {
+    localStorage.setItem('showDoneTargets', String(showDone));
+  }, [showDone]);
 
   useEffect(() => {
     loadTargets();
