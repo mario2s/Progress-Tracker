@@ -9,6 +9,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+const isMissingSortOrderError = (err: unknown): boolean => {
+  if (!err || typeof err !== 'object') return false;
+  const maybeErr = err as { code?: string; message?: string };
+  const msg = (maybeErr.message || '').toLowerCase();
+  return maybeErr.code === '42703' || (msg.includes('sort_order') && msg.includes('column'));
+};
+
 export interface Target {
   id: string;
   name: string;
@@ -17,6 +24,7 @@ export interface Target {
   priority: number;
   is_done: boolean;
   due_date: string | null;
+  sort_order: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -56,6 +64,7 @@ export const targetsService = {
         priority: 1,
         is_done: false,
         due_date: dueDate,
+        sort_order: null,
         user_id: user.id,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -74,14 +83,34 @@ export const targetsService = {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return [];
 
-    const { data, error } = await supabase
+    const orderedBySort = await supabase
       .from('targets')
       .select('*')
       .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
+      .order('sort_order', { ascending: true, nullsFirst: false })
+      .order('created_at', { ascending: true });
 
-    if (error) throw error;
-    return data || [];
+    if (!orderedBySort.error) {
+      return orderedBySort.data || [];
+    }
+
+    // Fallback for environments where the migration adding sort_order has not run yet.
+    if (isMissingSortOrderError(orderedBySort.error)) {
+      const fallback = await supabase
+        .from('targets')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('priority', { ascending: true })
+        .order('created_at', { ascending: true });
+
+      if (fallback.error) {
+        throw new Error(fallback.error.message || 'Failed to load targets');
+      }
+
+      return (fallback.data || []).map(target => ({ ...target, sort_order: null }));
+    }
+
+    throw new Error(orderedBySort.error.message || 'Failed to load targets');
   },
 
   async getTarget(id: string): Promise<Target | null> {
@@ -166,5 +195,31 @@ export const targetsService = {
 
     if (error) throw error;
     return data;
+  },
+
+  async updateTargetsOrder(orderedIds: string[]): Promise<void> {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Not authenticated');
+
+    const updates = orderedIds.map((id, index) =>
+      supabase
+        .from('targets')
+        .update({
+          sort_order: index,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', id)
+        .eq('user_id', user.id)
+    );
+
+    const results = await Promise.all(updates);
+    const failed = results.find(r => r.error);
+    if (!failed?.error) return;
+
+    if (isMissingSortOrderError(failed.error)) {
+      throw new Error('Manual ordering needs DB migration: add the sort_order column first.');
+    }
+
+    throw new Error(failed.error.message || 'Failed to reorder targets');
   },
 };

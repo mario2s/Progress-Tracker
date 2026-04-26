@@ -1,10 +1,51 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  DndContext,
+  PointerSensor,
+  TouchSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import type { Target } from '../lib/supabase';
 import { targetsService, authService } from '../lib/supabase';
 import { TargetForm } from '../components/TargetForm';
 import { TargetCard } from '../components/TargetCard';
 import { HeaderControls } from '../components/HeaderControls';
 import { useAuth } from '../contexts/useAuth';
+
+interface SortableTargetItemProps {
+  target: Target;
+  onUpdate: (target: Target) => void;
+  onDelete: (id: string) => void;
+}
+
+const SortableTargetItem: React.FC<SortableTargetItemProps> = ({ target, onUpdate, onDelete }) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: target.id });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{ transform: CSS.Transform.toString(transform), transition, touchAction: 'none', userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' } as React.CSSProperties}
+      className={`cursor-grab active:cursor-grabbing${isDragging ? ' opacity-60 scale-[1.02] z-50' : ''}`}
+      {...attributes}
+      {...listeners}
+    >
+      <TargetCard
+        target={target}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
+      />
+    </div>
+  );
+};
 
 export const TrackerPage = () => {
   const { user } = useAuth();
@@ -13,13 +54,22 @@ export const TrackerPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [showDone, setShowDone] = useState(true);
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 8 } })
+  );
 
   useEffect(() => {
     loadTargets();
   }, []);
 
-  const sort = (data: Target[]) =>
+  const sortForDisplay = (data: Target[]) =>
     [...data].sort((a, b) => {
+      if (a.sort_order !== null && b.sort_order !== null && a.sort_order !== b.sort_order) {
+        return a.sort_order - b.sort_order;
+      }
+      if (a.sort_order !== null && b.sort_order === null) return -1;
+      if (a.sort_order === null && b.sort_order !== null) return 1;
       if (a.priority !== b.priority) return a.priority - b.priority;
       return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
     });
@@ -29,7 +79,7 @@ export const TrackerPage = () => {
     setError(null);
     try {
       const data = await targetsService.getTargets();
-      setTargets(sort(data));
+      setTargets(sortForDisplay(data));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load targets');
     } finally {
@@ -39,15 +89,58 @@ export const TrackerPage = () => {
 
   const handleTargetCreated = (target: Target) => {
     setShowForm(false);
-    setTargets(sort([target, ...targets]));
+    setTargets(sortForDisplay([target, ...targets]));
   };
 
   const handleTargetUpdate = (updated: Target) => {
-    setTargets(sort(targets.map(t => (t.id === updated.id ? updated : t))));
+    setTargets(sortForDisplay(targets.map(t => (t.id === updated.id ? updated : t))));
   };
 
   const handleTargetDelete = (id: string) => {
     setTargets(targets.filter(t => t.id !== id));
+  };
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const activeId = String(active.id);
+    const overId = String(over.id);
+    const currentVisible = targets.filter(t => (showDone ? true : !t.is_done));
+    const oldIndex = currentVisible.findIndex(t => t.id === activeId);
+    const newIndex = currentVisible.findIndex(t => t.id === overId);
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    const reorderedVisible = [...currentVisible];
+    const [moved] = reorderedVisible.splice(oldIndex, 1);
+    reorderedVisible.splice(newIndex, 0, moved);
+
+    let reorderedAll: Target[];
+    if (showDone) {
+      reorderedAll = reorderedVisible;
+    } else {
+      let visibleCursor = 0;
+      reorderedAll = targets.map(t => {
+        if (t.is_done) return t;
+        const nextTarget = reorderedVisible[visibleCursor];
+        visibleCursor += 1;
+        return nextTarget;
+      });
+    }
+
+    const normalized = reorderedAll.map((target, index) => ({
+      ...target,
+      sort_order: index,
+    }));
+
+    setTargets(normalized);
+
+    try {
+      await targetsService.updateTargetsOrder(normalized.map(t => t.id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to reorder targets');
+      loadTargets();
+    }
   };
 
   const visibleTargets = targets.filter(t => showDone ? true : !t.is_done);
@@ -200,14 +293,25 @@ export const TrackerPage = () => {
               </h2>
             </div>
             <div className="grid gap-4">
-              {visibleTargets.map(target => (
-                <TargetCard
-                  key={target.id}
-                  target={target}
-                  onUpdate={handleTargetUpdate}
-                  onDelete={handleTargetDelete}
-                />
-              ))}
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={visibleTargets.map(target => target.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {visibleTargets.map(target => (
+                    <SortableTargetItem
+                      key={target.id}
+                      target={target}
+                      onUpdate={handleTargetUpdate}
+                      onDelete={handleTargetDelete}
+                    />
+                  ))}
+                </SortableContext>
+              </DndContext>
             </div>
           </div>
         )}

@@ -176,12 +176,14 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
         <h3
           className={`text-xl font-bold transition ${isLongName ? 'cursor-pointer hover:opacity-70' : ''} ${target.is_done ? 'text-[#b89b7c] dark:text-zinc-600 line-through' : 'text-[#2a1f16] dark:text-zinc-100'}`}
           onClick={isLongName ? () => setShowFullName(true) : undefined}
+          onPointerDown={e => e.stopPropagation()}
           title={isLongName ? target.name : undefined}
         >
           {displayName}
         </h3>
         <button
           onClick={confirmDelete}
+          onPointerDown={e => e.stopPropagation()}
           disabled={loading}
           className="text-[#8f7353] dark:text-zinc-600 hover:text-red-400 font-bold text-lg transition w-7 h-7 rounded-full border-2 border-orange-600 hover:border-red-400 flex items-center justify-center flex-shrink-0"
           title="Delete"
@@ -223,6 +225,7 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
         <select
           value={target.priority}
           onChange={(e) => handlePriorityChange(parseInt(e.target.value))}
+          onPointerDown={e => e.stopPropagation()}
           disabled={loading}
           className="text-sm bg-transparent border-none outline-none text-[#7c5f37] dark:text-zinc-500 cursor-pointer hover:text-[#2a1f16] dark:hover:text-zinc-300 transition"
         >
@@ -247,6 +250,7 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
             <div className="flex flex-col items-center gap-0.5">
               <button
                 onClick={confirmMarkAsDone}
+                onPointerDown={e => e.stopPropagation()}
                 disabled={loading}
                 className="px-3 py-1.5 bg-orange-500 hover:bg-orange-400 text-white font-bold rounded-lg text-xs transition disabled:opacity-50"
               >
@@ -262,6 +266,7 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
             <div className="flex flex-col items-center gap-0.5">
               <button
                 onClick={confirmMarkAsDone}
+                onPointerDown={e => e.stopPropagation()}
                 disabled={loading}
                 className="px-3 py-1.5 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-lg text-xs transition disabled:opacity-50 pulse-btn"
               >
@@ -294,6 +299,7 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
       <div className="flex gap-3">
         <button
           onClick={handleAddProgress}
+          onPointerDown={e => e.stopPropagation()}
           disabled={loading || target.is_done}
           className="flex-1 px-4 py-3 bg-[#fff7ef] dark:bg-zinc-800 hover:bg-[#f8ede0] dark:hover:bg-zinc-700 disabled:bg-[#ead9c8] dark:disabled:bg-zinc-900 text-[#3b2b1f] dark:text-zinc-200 disabled:text-[#9b7a58] dark:disabled:text-zinc-700 border border-[#e9d7c4] dark:border-zinc-700 disabled:border-[#ead9c8] dark:disabled:border-zinc-800 rounded-xl font-semibold transition hover:border-[#ddb892] dark:hover:border-zinc-600 disabled:cursor-not-allowed"
         >
@@ -301,6 +307,7 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
         </button>
         <button
           onClick={handleReset}
+          onPointerDown={e => e.stopPropagation()}
           disabled={loading || target.is_done}
           className="flex-1 px-4 py-3 bg-[#fff7ef] dark:bg-zinc-800 hover:bg-[#f8ede0] dark:hover:bg-zinc-700 disabled:bg-[#ead9c8] dark:disabled:bg-zinc-900 text-[#3b2b1f] dark:text-zinc-200 disabled:text-[#9b7a58] dark:disabled:text-zinc-700 border border-[#e9d7c4] dark:border-zinc-700 disabled:border-[#ead9c8] dark:disabled:border-zinc-800 rounded-xl font-semibold transition hover:border-[#ddb892] dark:hover:border-zinc-600 disabled:cursor-not-allowed"
         >
