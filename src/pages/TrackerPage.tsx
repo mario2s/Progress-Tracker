@@ -70,16 +70,6 @@ export const TrackerPage = () => {
     isSortingRef.current = isSorting;
   }, [isSorting]);
 
-  // Lock document scroll while dragging so the dragged card doesn't fight the page
-  useEffect(() => {
-    if (isSorting) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
-  }, [isSorting]);
-
   useEffect(() => {
     loadTargets();
   }, []);
