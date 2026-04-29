@@ -172,11 +172,13 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
           : 'border-[#ead9c8] dark:border-zinc-800 hover:border-[#ddb892] dark:hover:border-zinc-700'
       }`}>
         <div
-          {...dragRowProps}
           className={`flex items-center gap-3 min-w-0 ${target.is_done ? 'opacity-50' : ''}`}
-          style={{ touchAction: 'none', ...(dragRowProps?.style ?? {}) }}
         >
-          <div className="min-w-0 flex-1 flex items-center gap-3">
+          <div
+            {...dragRowProps}
+            className="min-w-0 flex items-center gap-3 w-1/2 sm:flex-1 cursor-grab active:cursor-grabbing"
+            style={{ touchAction: 'none', ...(dragRowProps?.style ?? {}) }}
+          >
             <h3 className={`truncate text-base font-bold ${target.is_done ? 'text-[#b89b7c] dark:text-zinc-600 line-through' : 'text-[#2a1f16] dark:text-zinc-100'}`}>
               {target.name}
             </h3>
@@ -213,7 +215,7 @@ export const TargetCard: React.FC<TargetCardProps> = ({ target, onUpdate, onDele
       <div className="flex items-start justify-between gap-2 mb-2">
         <div
           {...dragRowProps}
-          className="flex items-start gap-2 min-w-0 flex-1 cursor-grab active:cursor-grabbing"
+          className="flex items-start gap-2 min-w-0 w-1/2 sm:flex-1 cursor-grab active:cursor-grabbing"
           style={{ touchAction: 'none', ...(dragRowProps?.style ?? {}) }}
         >
           <h3
