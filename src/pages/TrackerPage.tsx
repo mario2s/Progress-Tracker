@@ -243,7 +243,9 @@ export const TrackerPage = () => {
         <div className="mb-12">
           <div className="flex items-start justify-between gap-4 mb-3">
             <div className="min-w-0">
-              <h1 className="text-3xl font-bold text-[#2a1f16] dark:text-zinc-100 mb-2">Progress Tracker</h1>
+              <div className="flex items-end gap-2 mb-2">
+                <h1 className="text-3xl font-bold leading-none text-[#2a1f16] dark:text-zinc-100">Progress Tracker</h1>
+              </div>
               <p className="text-[#7c5f37] dark:text-zinc-500 text-sm sm:text-lg">Track your goals with clarity and purpose</p>
             </div>
             <div className="flex flex-col gap-3 items-end flex-shrink-0">
@@ -365,6 +367,14 @@ export const TrackerPage = () => {
         {/* Footer */}
         <div className="mt-16 text-center text-[#8f7353] dark:text-zinc-700 text-sm">
           <p>Build with NS and AI by MD</p>
+          <div className="mt-1 flex justify-center">
+            <img
+              src="/logo.png"
+              alt="AD/HD"
+              className="w-[60px] h-auto dark:opacity-90"
+              style={{ imageRendering: 'pixelated' }}
+            />
+          </div>
           <p className="mt-1 text-xs">v{appVersion}</p>
         </div>
       </div>
